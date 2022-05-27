@@ -1,18 +1,26 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.github.yanglang116.gamecenter</id>
+    <id>com.xtu.plugins.game.center</id>
     <name>GameCenter</name>
-    <vendor>yanglang116</vendor>
+    <vendor email="yanglang116@gmail.com">yanglang116@gmail.com</vendor>
 
+    <idea-version since-build="211"/>
     <depends>com.intellij.modules.platform</depends>
 
-    <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.github.yanglang116.gamecenter.services.MyApplicationService"/>
-        <projectService serviceImplementation="com.github.yanglang116.gamecenter.services.MyProjectService"/>
-    </extensions>
-
     <applicationListeners>
-        <listener class="com.github.yanglang116.gamecenter.listeners.MyProjectManagerListener"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
+        <listener topic="com.intellij.ide.AppLifecycleListener"
+                  class="com.xtu.plugin.game.lifecycle.AppLifecycleListenerImpl"/>
     </applicationListeners>
+
+    <actions>
+        <group id="com.xtu.plugins.game.center.GameCenterActionGroup"
+               class="com.xtu.plugin.game.action.GameCenterActionGroup"
+               popup="true"
+               text="Game Center"
+               description="Power By game center plugin"
+               icon="PluginIcons.LOGO">
+            <add-to-group group-id="MainMenu" relative-to-action="HelpMenu" anchor="after"/>
+        </group>
+    </actions>
+
 </idea-plugin>

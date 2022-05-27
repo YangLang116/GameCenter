@@ -1,7 +1,9 @@
-<!-- Keep a Changelog guide -> https://keepachangelog.com -->
+# Changelog
 
-# GameCenter Changelog
+## [Coming]
+### Changed
 
-## [Unreleased]
-### Added
-- Initial scaffold created from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
+## [1.0.0] - 2022-05-27
+### Changed
+- Add FlappyBird Game
+
