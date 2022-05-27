@@ -1,6 +1,6 @@
-package org.jetbrains.plugins.template.services
+package com.github.yanglang116.gamecenter.services
 
-import org.jetbrains.plugins.template.MyBundle
+import com.github.yanglang116.gamecenter.MyBundle
 
 class MyApplicationService {
 
