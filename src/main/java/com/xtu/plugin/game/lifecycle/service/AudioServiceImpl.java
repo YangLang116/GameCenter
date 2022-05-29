@@ -6,6 +6,7 @@ import com.xtu.plugin.game.utils.StreamUtils;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -25,7 +26,8 @@ public class AudioServiceImpl implements AudioService {
 
     private void playInner(InputStream inputStream) {
         try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(inputStream);
+            BufferedInputStream bufferedStream = new BufferedInputStream(inputStream);
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(bufferedStream);
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             clip.start();
