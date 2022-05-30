@@ -9,6 +9,9 @@ GameCenter is an IDEA Plugin for Developer to play Games
 ## 使用截图
 ![plugin display](https://iflutter.toolu.cn/configs/game_display.png)
 
+## 游戏列表
+- FlappyBird - 从项目 [FlappyBird](https://github.com/kingyuluk/FlappyBird) 进行移植
+
 ## 项目未来规划
 - 移植FC游戏
 
