@@ -4,7 +4,6 @@ import com.xtu.plugin.game.utils.StreamUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,23 +21,15 @@ public class FcGameLoader {
     private final List<Game> gameList = new ArrayList<>();
 
     public void load() {
-        InputStream inputStream = null;
-        try {
-            inputStream = FcGameLoader.class.getResourceAsStream("/game/fc/conf.json");
-            String content = StreamUtils.readText(inputStream);
-            if (content == null) return;
-            JSONArray gameJsonArray = new JSONArray(content);
-            int length = gameJsonArray.length();
-            for (int i = 0; i < length; i++) {
-                JSONObject gameObj = (JSONObject) gameJsonArray.get(i);
-                String gameName = gameObj.optString("name");
-                String gamePath = gameObj.optString("path");
-                this.gameList.add(new Game(gameName, gamePath));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            StreamUtils.closeStream(inputStream);
+        String content = StreamUtils.readTextFromResource("/game/fc/conf.json");
+        if (content == null) return;
+        JSONArray gameJsonArray = new JSONArray(content);
+        int length = gameJsonArray.length();
+        for (int i = 0; i < length; i++) {
+            JSONObject gameObj = (JSONObject) gameJsonArray.get(i);
+            String gameName = gameObj.optString("name");
+            String gamePath = gameObj.optString("path");
+            this.gameList.add(new Game(gameName, gamePath));
         }
     }
 

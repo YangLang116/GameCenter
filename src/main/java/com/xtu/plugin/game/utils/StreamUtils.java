@@ -1,5 +1,7 @@
 package com.xtu.plugin.game.utils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
@@ -18,20 +20,22 @@ public class StreamUtils {
         }
     }
 
-    public static String readText(InputStream inputStream) {
+    public static String readTextFromResource(@NotNull String name) {
+        InputStream inputStream = null;
         ByteArrayOutputStream outputStream = null;
-        int len = 0;
-        byte[] buff = new byte[1024];
         try {
+            inputStream = StreamUtils.class.getClassLoader().getResourceAsStream(name);
             outputStream = new ByteArrayOutputStream();
-            while ((len = inputStream.read(buff)) != -1) {
-                outputStream.write(buff, 0, len);
+            int len = 0;
+            byte[] buffer = new byte[1024];
+            while ((len = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, len);
             }
             return outputStream.toString(StandardCharsets.UTF_8);
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            return "";
         } finally {
+            closeStream(inputStream);
             closeStream(outputStream);
         }
     }

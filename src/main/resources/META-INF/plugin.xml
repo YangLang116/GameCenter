@@ -6,6 +6,7 @@
 
     <idea-version since-build="211"/>
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.javafx</depends>
 
     <applicationListeners>
         <listener topic="com.intellij.ide.AppLifecycleListener"

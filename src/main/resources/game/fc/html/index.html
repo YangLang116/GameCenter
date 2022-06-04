@@ -1,0 +1,30 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>{htmlCss}</style>
+</head>
+<body>
+<div class="root">
+    <div id="emulator" style="width:100%;height:100%;"></div>
+</div>
+</body>
+<script>{libScript}</script>
+<script type="text/javascript" charset="utf-8">
+    $(function () {
+        let nes = new JSNES({
+            'ui': $('#emulator').JSNESUI(),
+        });
+        let request = new XMLHttpRequest()
+        request.overrideMimeType('text/plain; charset=x-user-defined')
+        request.open('get', 'http://localhost:63342/fcgame/Tank_1990.nes')
+        request.send(null)
+        request.onload = function () {
+            nes.ui.loadROM(request.responseText)
+        }
+    });
+
+
+
+</script>
+
+</html>

@@ -18,8 +18,11 @@ public class FCGameListDialog extends DialogWrapper {
         new FCGameListDialog(project).show();
     }
 
-    protected FCGameListDialog(@NotNull Project project) {
+    private final Project project;
+
+    private FCGameListDialog(@NotNull Project project) {
         super(project, null, false, IdeModalityType.IDE, false);
+        this.project = project;
         setHorizontalStretch(1.2f);
         setVerticalStretch(1.5f);
         init();
@@ -49,7 +52,8 @@ public class FCGameListDialog extends DialogWrapper {
         });
         listView.addListSelectionListener(e -> {
             FcGameLoader.Game selectedGame = listView.getSelectedValue();
-            System.out.println(selectedGame);
+            close(DialogWrapper.OK_EXIT_CODE);
+            FCGamePlayDialog.showDialog(project, selectedGame);
         });
         return new JBScrollPane(listView);
     }
