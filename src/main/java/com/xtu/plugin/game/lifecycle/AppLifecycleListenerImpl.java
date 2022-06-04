@@ -5,7 +5,8 @@ import com.xtu.game.base.GameCenterFacade;
 import com.xtu.game.base.GameCenterServiceProvider;
 import com.xtu.game.base.service.AudioService;
 import com.xtu.game.base.service.StorageService;
-import com.xtu.plugin.game.conf.ConfLoader;
+import com.xtu.plugin.game.conf.FcGameLoader;
+import com.xtu.plugin.game.conf.SwingGameLoader;
 import com.xtu.plugin.game.lifecycle.service.AudioServiceImpl;
 import com.xtu.plugin.game.lifecycle.service.StorageServiceImpl;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +31,7 @@ public class AppLifecycleListenerImpl implements AppLifecycleListener {
                 return new StorageServiceImpl();
             }
         });
-        //加载游戏列表
-        ConfLoader.getInstance().load();
+        SwingGameLoader.getInstance().load();
+        FcGameLoader.getInstance().load();
     }
 }

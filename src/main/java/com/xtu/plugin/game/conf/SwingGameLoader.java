@@ -9,14 +9,14 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-public class ConfLoader {
+public class SwingGameLoader {
 
-    private static final ConfLoader sInstance = new ConfLoader();
+    private static final SwingGameLoader sInstance = new SwingGameLoader();
 
-    private ConfLoader() {
+    private SwingGameLoader() {
     }
 
-    public static ConfLoader getInstance() {
+    public static SwingGameLoader getInstance() {
         return sInstance;
     }
 
@@ -25,7 +25,7 @@ public class ConfLoader {
     public void load() {
         InputStream configStream = null;
         try {
-            configStream = ConfLoader.class.getResourceAsStream("/conf/conf.properties");
+            configStream = SwingGameLoader.class.getResourceAsStream("/game/swing/conf.properties");
             Properties properties = new Properties();
             properties.load(configStream);
             Set<Object> keySet = properties.keySet();

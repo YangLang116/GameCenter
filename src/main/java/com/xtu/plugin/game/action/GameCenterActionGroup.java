@@ -3,42 +3,42 @@ package com.xtu.plugin.game.action;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.Separator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
-import com.xtu.plugin.game.conf.ConfLoader;
+import com.xtu.plugin.game.conf.SwingGameLoader;
 import com.xtu.plugin.game.utils.ToastUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public final class GameCenterActionGroup extends ActionGroup {
 
     @Override
     public void update(@NotNull AnActionEvent e) {
-        Project project = e.getProject();
-        if (project == null) {
-            e.getPresentation().setEnabledAndVisible(false);
-            return;
-        }
-        Map<String, String> gameList = ConfLoader.getInstance().getGameList();
-        if (gameList.size() <= 0) {
-            e.getPresentation().setEnabledAndVisible(false);
-            return;
-        }
-        e.getPresentation().setEnabledAndVisible(true);
+        final Project project = e.getProject();
+        e.getPresentation().setEnabledAndVisible(project != null);
     }
 
     @Override
     public AnAction @NotNull [] getChildren(@Nullable AnActionEvent e) {
-        Map<String, String> gameList = ConfLoader.getInstance().getGameList();
-        if (gameList.size() <= 0 || e == null) return new AnAction[0];
-        return gameList.entrySet().stream().map(entry -> {
-            String gameName = entry.getKey();
-            String mainClass = entry.getValue();
-            return new GameCenterAction(gameName, () -> runGame(e.getProject(), mainClass));
-        }).toArray(AnAction[]::new);
+        if (e == null || e.getProject() == null) return new AnAction[0];
+        final List<AnAction> actionList = new ArrayList<>();
+        actionList.add(new FCGameAction());
+        actionList.add(new Separator());
+        Map<String, String> gameList = SwingGameLoader.getInstance().getGameList();
+        if (gameList.size() > 0) {
+            for (Map.Entry<String, String> swingGame : gameList.entrySet()) {
+                String gameName = swingGame.getKey();
+                String mainClass = swingGame.getValue();
+                actionList.add(new GameCenterAction(gameName, () -> runGame(e.getProject(), mainClass)));
+            }
+        }
+        return actionList.toArray(AnAction[]::new);
     }
 
     private void runGame(Project project, String mainClass) {

@@ -7,21 +7,25 @@ GameCenter is an IDEA Plugin for Developer to play Games
 为了缓解日复一日枯燥编程带来了的压力，由此`Game Center`插件诞生。`Game Center`顾名思义，是在`IDEA`中集成一个游戏菜单，方便开发同学工作之余使用。
 
 ## 使用截图
+
 ![plugin display](https://iflutter.toolu.cn/configs/game_display.png)
 
 ## 游戏列表
+
 - FlappyBird - 从项目 [FlappyBird](https://github.com/kingyuluk/FlappyBird) 进行移植
 
 ## 项目未来规划
+
 - 移植FC游戏
 
 ---
 
 ## 插件扩展
+
 考虑该插件的扩展性，降低后期的开发成本，方便更多的游戏集成。`Game Center` 支持将每一个游戏以 `jar` 文件的形式进行引入。
 
-
 ### 开发环境要求
+
 - java 11
 
 ### 开发步骤
@@ -57,7 +61,7 @@ audioService.play(audioStream);
 
 - 5、注入游戏到 `Game Center` IDEA插件
     - 将第4步生成的jar，放入项目根目录的`libs`文件夹
-    - 在`src/main/resources/conf/conf.properties` 中配置游戏，格式如下：
+    - 在`src/main/resources/game/swing/conf.properties` 中配置游戏，格式如下：
 
   ```
   Game Name=runGame 函数所在的类的FQN，例如：FlyBird=com.kingyu.flappybird.app.App
