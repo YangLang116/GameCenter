@@ -16,15 +16,11 @@
         });
         let request = new XMLHttpRequest()
         request.overrideMimeType('text/plain; charset=x-user-defined')
-        request.open('get', 'http://localhost:63342/fcgame/Tank_1990.nes')
+        request.open('get', 'https://game.toolu.cn/{GameFile}')
         request.send(null)
         request.onload = function () {
             nes.ui.loadROM(request.responseText)
         }
     });
-
-
-
 </script>
-
 </html>

@@ -21,10 +21,14 @@ public class StreamUtils {
     }
 
     public static String readTextFromResource(@NotNull String name) {
-        InputStream inputStream = null;
+        InputStream resourceAsStream = StreamUtils.class.getClassLoader().getResourceAsStream(name);
+        if (resourceAsStream == null) return null;
+        return readFromStream(resourceAsStream);
+    }
+
+    public static String readFromStream(@NotNull InputStream inputStream) {
         ByteArrayOutputStream outputStream = null;
         try {
-            inputStream = StreamUtils.class.getClassLoader().getResourceAsStream(name);
             outputStream = new ByteArrayOutputStream();
             int len = 0;
             byte[] buffer = new byte[1024];

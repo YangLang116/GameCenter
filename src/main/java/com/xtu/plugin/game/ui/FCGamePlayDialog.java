@@ -2,6 +2,7 @@ package com.xtu.plugin.game.ui;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.javafx.JavaFxHtmlPanel;
 import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.ui.jcef.JBCefBrowser;
@@ -24,23 +25,23 @@ public class FCGamePlayDialog extends DialogWrapper {
     private FCGamePlayDialog(@NotNull Project project, FcGameLoader.Game game) {
         super(project, null, false, IdeModalityType.IDE, false);
         this.game = game;
-//        setSize(512, 480);
-//        setResizable(false);
+        setTitle(game.name);
+        setSize(512, 480);
         init();
     }
 
     @Override
     protected @Nullable JComponent createCenterPanel() {
         boolean supportJCEF = JBCefApp.isSupported();
-        System.out.println("supportJCEF -> " + supportJCEF);
         if (supportJCEF) {
             JBCefBrowser jcefBrowser = new JBCefBrowser();
+            jcefBrowser.getComponent().setBackground(JBColor.BLACK);
             jcefBrowser.loadHTML(getGameContent());
-            jcefBrowser.openDevtools();
             return jcefBrowser.getComponent();
         } else {
             MyFxHtmlPanel htmlPanel = new MyFxHtmlPanel();
             htmlPanel.setHtml(getGameContent());
+            htmlPanel.setBackground(JBColor.BLACK);
             return htmlPanel.getComponent();
         }
     }
@@ -72,12 +73,7 @@ public class FCGamePlayDialog extends DialogWrapper {
                 StreamUtils.readTextFromResource("/game/fc/html/ui.js");
         htmlContent = htmlContent.replace("{libScript}", scriptContent);
         //game Data
-//        String gameData = StreamUtils.readTextFromResource("/game/fc/nesList/" + game.path);
-//        htmlContent = htmlContent.replace("{gameData}", gameData);
-
-        System.out.println("\n\n");
-        System.out.println(htmlContent);
-
+        htmlContent = htmlContent.replace("{GameFile}", game.path);
         return htmlContent;
     }
 
