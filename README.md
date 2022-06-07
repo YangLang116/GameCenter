@@ -2,6 +2,8 @@
 GameCenter is an IDEA Plugin for Developer to play Games
 <!-- Plugin description end -->
 
+![platforms](https://img.shields.io/badge/platforms-macos%20%7C%20windows%20%7C%20linux-blue) ![tools](https://img.shields.io/badge/idea-intellij_IDEA%20%7C%20AndroidStudio-blue) ![licence](https://img.shields.io/badge/licence-MIT-blue) ![version](https://img.shields.io/badge/version-v1.0.1-blue)
+
 ## 项目说明
 
 为了缓解日复一日枯燥编程带来了的压力，由此`Game Center`插件诞生。`Game Center`顾名思义，是在`IDEA`中集成一个游戏菜单，方便开发同学工作之余使用。
@@ -14,9 +16,20 @@ GameCenter is an IDEA Plugin for Developer to play Games
 
 - FlappyBird - 从项目 [FlappyBird](https://github.com/kingyuluk/FlappyBird) 进行移植
 
-## 项目未来规划
+- FC游戏 - [游戏清单](https://game.toolu.cn/conf.json) 按键说明如下：  
 
-- 移植FC游戏
+| 按键 | player1 | player2 |
+| :----: | :----: | :----: |  
+| Left | A | Num-4 |  
+| Right | D | Num-6 |  
+| Up | W | Num-8 |
+| Down | S | Num-2 |  
+| A | J | Num-7 |  
+| B | K | Num-9 |
+| AA | Z | Num-/ |
+| BB | X | Num-* |
+| Start |	Enter |	Num-1 |
+| Select | Ctrl |	Num-3 |
 
 ---
 
