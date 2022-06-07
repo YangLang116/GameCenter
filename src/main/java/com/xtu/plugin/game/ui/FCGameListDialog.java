@@ -1,6 +1,7 @@
 package com.xtu.plugin.game.ui;
 
 import com.intellij.ide.BrowserUtil;
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -68,7 +69,7 @@ public class FCGameListDialog extends DialogWrapper {
             if (supportJCEF) {
                 FCGamePlayDialog.showDialog(project, selectedGame.name, gameContent);
             } else {
-                loadHtmlFromFs(gameContent);
+                WriteAction.run(() -> loadHtmlFromFs(gameContent));
             }
         });
         return new JBScrollPane(listView);
