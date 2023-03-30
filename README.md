@@ -2,7 +2,11 @@
 GameCenter is an IDEA Plugin for Developer to play Games
 <!-- Plugin description end -->
 
-![platforms](https://img.shields.io/badge/platforms-macos%20%7C%20windows%20%7C%20linux-blue) ![tools](https://img.shields.io/badge/idea-intellij_IDEA%20%7C%20AndroidStudio-blue) ![licence](https://img.shields.io/badge/licence-MIT-blue) ![version](https://img.shields.io/badge/version-v1.0.1-blue)
+![platforms](https://img.shields.io/badge/platforms-macos%20%7C%20windows%20%7C%20linux-blue) 
+![tools](https://img.shields.io/badge/idea-intellij_IDEA%20%7C%20AndroidStudio-blue) 
+![licence](https://img.shields.io/badge/licence-MIT-blue) 
+![downloads](https://img.shields.io/jetbrains/plugin/d/19259)
+![version](https://img.shields.io/jetbrains/plugin/v/19259)
 
 ## 项目说明
 
