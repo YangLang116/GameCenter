@@ -8,6 +8,11 @@ GameCenter is an IDEA Plugin for Developer to play Games
 ![downloads](https://img.shields.io/jetbrains/plugin/d/19259)
 ![version](https://img.shields.io/jetbrains/plugin/v/19259)
 
+## 插件使用
+[GameCenter](https://github.com/YangLang116/GameCenter):支持IDEA中展示游戏菜单  
+插件安装：插件已上传官方Plugins仓库，可搜索 `GameCenter` 下载  
+使用文档：[点击跳转](https://iflutter.toolu.cn/content/chapter-8/part-1.html)
+
 ## 项目说明
 
 为了缓解日复一日枯燥编程带来了的压力，由此`Game Center`插件诞生。`Game Center`顾名思义，是在`IDEA`中集成一个游戏菜单，方便开发同学工作之余使用。
