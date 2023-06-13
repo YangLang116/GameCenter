@@ -3,34 +3,33 @@ package com.xtu.plugin.game.utils;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.awt.RelativePoint;
+import org.jdesktop.swingx.util.WindowUtils;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Created by YangLang on 2017/11/25.
  */
 public class ToastUtil {
 
-    private static void make(JComponent jComponent, MessageType type, String text) {
-        JBPopupFactory.getInstance()
-                .createHtmlTextBalloonBuilder(text, type, null)
-                .setFadeoutTime(7500)
-                .createBalloon()
-                .show(RelativePoint.getCenterOf(jComponent), Balloon.Position.above);
-    }
-
-
-    public static void make(Project project, MessageType type, String text) {
+    public static void make(MessageType type, String text) {
         Runnable showRunnable = () -> {
-            StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
-            make(statusBar.getComponent(), type, text);
+            WindowManager windowManager = WindowManager.getInstance();
+            JFrame currentFrame = windowManager.findVisibleFrame();
+            if (currentFrame == null) return;
+            Point windowCenterPoint = WindowUtils.getPointForCentering(currentFrame);
+            RelativePoint relativePoint = RelativePoint.fromScreen(windowCenterPoint);
+            JBPopupFactory.getInstance()
+                    .createHtmlTextBalloonBuilder(text, type, null)
+                    .setFadeoutTime(7500)
+                    .createBalloon()
+                    .show(relativePoint, Balloon.Position.below);
         };
         Application application = ApplicationManager.getApplication();
         if (application.isDispatchThread()) {

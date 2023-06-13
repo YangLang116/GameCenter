@@ -1,25 +1,25 @@
 package com.xtu.plugin.game.ui;
 
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.jcef.JBCefBrowser;
-import org.jetbrains.annotations.NotNull;
+import com.xtu.plugin.game.utils.WindowUtils;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
 public class FCGamePlayDialog extends DialogWrapper {
 
-    public static void showDialog(@NotNull Project project, String title, String htmlContent) {
-        new FCGamePlayDialog(project, title, htmlContent).show();
+    public static void showDialog(String title, String htmlContent) {
+        JComponent parentComponent = WindowUtils.getVisibleRootPanel();
+        new FCGamePlayDialog(parentComponent, title, htmlContent).show();
     }
 
     private final String htmlContent;
 
-    private FCGamePlayDialog(@NotNull Project project, String title, String htmlContent) {
-        super(project, null, false, IdeModalityType.IDE, false);
+    private FCGamePlayDialog(JComponent parentComponent, String title, String htmlContent) {
+        super(null, parentComponent, false, IdeModalityType.IDE, false);
         this.htmlContent = htmlContent;
         setTitle(title);
         setSize(512, 480);
