@@ -19,10 +19,7 @@ public final class GameCenterActionGroup extends ActionGroup {
 
     @Override
     public AnAction @NotNull [] getChildren(@Nullable AnActionEvent e) {
-        if (e == null || e.getProject() == null) return new AnAction[0];
         final List<AnAction> actionList = new ArrayList<>();
-        actionList.add(new FCGameAction());
-        actionList.add(new Separator());
         Map<String, String> gameList = SwingGameLoader.getInstance().getGameList();
         if (gameList.size() > 0) {
             for (Map.Entry<String, String> swingGame : gameList.entrySet()) {
@@ -30,7 +27,11 @@ public final class GameCenterActionGroup extends ActionGroup {
                 String mainClass = swingGame.getValue();
                 actionList.add(new GameCenterAction(gameName, () -> runGame(mainClass)));
             }
+            actionList.add(new Separator());
         }
+        actionList.add(new FCGameNetAction());
+        actionList.add(new FCGameLocalAction());
+        actionList.add(new FCGameUploadAction());
         return actionList.toArray(AnAction[]::new);
     }
 

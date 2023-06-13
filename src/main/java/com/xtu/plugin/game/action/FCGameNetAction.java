@@ -5,10 +5,10 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.xtu.plugin.game.ui.FCGameListDialog;
 import org.jetbrains.annotations.NotNull;
 
-public class FCGameAction extends AnAction {
+final class FCGameNetAction extends AnAction {
 
-    public FCGameAction() {
-        super("FC-Game List");
+    FCGameNetAction() {
+        super("Play FC-Game Online");
     }
 
     @Override

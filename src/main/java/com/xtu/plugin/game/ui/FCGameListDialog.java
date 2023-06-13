@@ -1,6 +1,5 @@
 package com.xtu.plugin.game.ui;
 
-import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
@@ -53,14 +52,18 @@ public class FCGameListDialog extends DialogWrapper {
         listView.addListSelectionListener(e -> {
             FcGameLoader.Game selectedGame = listView.getSelectedValue();
             close(DialogWrapper.OK_EXIT_CODE);
-            String gameContent = GameUtils.generateGame(selectedGame.name, selectedGame.path);
-            boolean supportJCEF = JBCefApp.isSupported();
-            if (supportJCEF) {
-                FCGamePlayDialog.showDialog(selectedGame.name, gameContent);
-            } else {
-                WriteAction.run(() -> GameUtils.openGameWithBrowser(gameContent));
-            }
+            playGame(selectedGame);
         });
         return new JBScrollPane(listView);
+    }
+
+    private static void playGame(FcGameLoader.Game selectedGame) {
+        boolean supportJCEF = JBCefApp.isSupported();
+        String gameContent = GameUtils.getGameOnlineHtml(selectedGame.name, selectedGame.path);
+        if (supportJCEF) {
+            FCGamePlayDialog.showDialog(selectedGame.name, gameContent);
+        } else {
+            GameUtils.openGameWithBrowser(gameContent, "online.html");
+        }
     }
 }

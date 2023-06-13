@@ -1,0 +1,48 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>FC Game</title>
+    <style>{htmlCss}</style>
+    <style>
+        #select_game {
+          display:block;
+          margin-left:auto;
+          margin-right:auto
+        }
+        #emulator {
+            display: none
+        }
+
+    </style>
+</head>
+<body>
+<div class="root">
+    <input type="file" id="select_game"/>
+    <div id="emulator" style="width:100%;height:100%;"></div>
+</div>
+</body>
+<script>{libScript}</script>
+<script type="text/javascript" charset="utf-8">
+    $(function () {
+        let nes = new JSNES({
+            'ui': $('#emulator').JSNESUI(),
+        });
+        $('#select_game').bind("change", function(evt){
+            let input = evt.target;
+            if (input.files.length == 0) {
+              console.log('No file selected');
+              return;
+            }
+            const file = input.files[0];
+            const reader = new FileReader();
+            reader.onload = () => {
+                nes.ui.loadROM(reader.result);
+                $('#select_game').hide();
+                $('#emulator').show();
+            };
+            reader.readAsBinaryString(file);
+        });
+    });
+
+</script>
+</html>

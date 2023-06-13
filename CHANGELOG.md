@@ -3,6 +3,10 @@
 ## [Coming]
 ### Changed
 
+## [1.0.3] - 2023-06-13
+### Changed
+- load fc-game from local
+
 ## [1.0.2] - 2023-06-12
 ### Changed
 - fix some bugs
