@@ -3,22 +3,14 @@
     <meta charset="UTF-8">
     <title>FC Game</title>
     <style>{htmlCss}</style>
-    <style>
-        #select_game {
-          display:block;
-          margin-left:auto;
-          margin-right:auto
-        }
-        #emulator {
-            display: none
-        }
-
-    </style>
 </head>
 <body>
 <div class="root">
-    <input type="file" id="select_game"/>
-    <div id="emulator" style="width:100%;height:100%;"></div>
+    <button onclick="chooseFile.click()" id="select_game" style="margin-left:40px;margin-top:60px;font-size:12px">
+        选择本地fc游戏文件(.nes)
+    </button>
+    <input type="file" id="chooseFile" style="display:none;">
+    <div id="emulator" style="width:100%;height:100%;display:none"></div>
 </div>
 </body>
 <script>{libScript}</script>
@@ -27,10 +19,9 @@
         let nes = new JSNES({
             'ui': $('#emulator').JSNESUI(),
         });
-        $('#select_game').bind("change", function(evt){
+        $('#chooseFile').bind("change", function(evt){
             let input = evt.target;
             if (input.files.length == 0) {
-              console.log('No file selected');
               return;
             }
             const file = input.files[0];
@@ -43,6 +34,5 @@
             reader.readAsBinaryString(file);
         });
     });
-
 </script>
 </html>
