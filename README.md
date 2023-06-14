@@ -29,16 +29,14 @@ GameCenter is an IDEA Plugin for Developer to play Games
 
 | 按键 | player1 | player2 |
 | :----: | :----: | :----: |  
-| Left | A | Num-4 |  
-| Right | D | Num-6 |  
-| Up | W | Num-8 |
-| Down | S | Num-2 |  
-| A | J | Num-7 |  
-| B | K | Num-9 |
-| AA | Z | Num-/ |
-| BB | X | Num-* |
-| Start |	Enter |	Num-1 |
-| Select | Ctrl |	Num-3 |
+| Left | A | ← |  
+| Right | D |→ |  
+| Up | W | ↑ |
+| Down | S | ↓ |  
+| B | J | Num-1 |  
+| A | K | Num-2 |
+| Start |	Enter |	Num-8 |
+| Select | Tab |	Num-7 |
 
 ## 重点说明
 如果当前IDEA支持 [JCEF](https://plugins.jetbrains.com/docs/intellij/jcef.html) ，FC游戏会在IDEA中直接打开，否则只能借助系统浏览器运行。
