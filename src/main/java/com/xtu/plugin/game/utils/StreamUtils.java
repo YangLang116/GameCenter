@@ -2,10 +2,7 @@ package com.xtu.plugin.game.utils;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 public class StreamUtils {
@@ -40,6 +37,15 @@ public class StreamUtils {
             return "";
         } finally {
             closeStream(inputStream);
+            closeStream(outputStream);
+        }
+    }
+
+    public static void writeToStream(@NotNull OutputStream outputStream, @NotNull String dataStr) throws IOException {
+        try {
+            outputStream.write(dataStr.getBytes(StandardCharsets.UTF_8));
+            outputStream.flush();
+        } finally {
             closeStream(outputStream);
         }
     }

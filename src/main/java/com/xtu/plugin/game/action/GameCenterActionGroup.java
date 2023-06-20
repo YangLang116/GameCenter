@@ -32,6 +32,8 @@ public final class GameCenterActionGroup extends ActionGroup {
         actionList.add(new FCGameNetAction());
         actionList.add(new FCGameLocalAction());
         actionList.add(new FCGameUploadAction());
+        actionList.add(new Separator());
+        actionList.add(new AdviceAction());
         return actionList.toArray(AnAction[]::new);
     }
 
