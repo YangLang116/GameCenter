@@ -11,7 +11,7 @@ import javax.swing.*;
 final class AdviceAction extends AnAction {
 
     AdviceAction() {
-        super("Suggestion & Feedback");
+        super("Suggestion");
     }
 
     @Override
