@@ -3,7 +3,8 @@ package com.xtu.plugin.game.ui;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.ui.ListSpeedSearch;
+import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.jcef.JBCefApp;
@@ -12,11 +13,14 @@ import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.xtu.plugin.game.conf.FcGameLoader;
 import com.xtu.plugin.game.utils.GameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -88,8 +92,22 @@ public class FCGameListDialog extends DialogWrapper {
                 playGame(selectedGame);
             }
         });
-        // 触发快速查找
-        new ListSpeedSearch<>(listView);
+        int MaskCode = SystemInfo.isMac ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK;
+        listView.registerKeyboardAction(e -> {
+            String searchKey = Messages.showInputDialog("", "输入游戏名称", Messages.getInformationIcon());
+            if (StringUtils.isEmpty(searchKey)) return;
+            int selectIndex = -1;
+            for (int i = 0; i < gameList.size(); i++) {
+                String gameName = gameList.get(i).name;
+                if (gameName.contains(searchKey)) {
+                    selectIndex = i;
+                    break;
+                }
+            }
+            if (selectIndex == -1) return;
+            listView.setSelectedIndex(selectIndex);
+            listView.ensureIndexIsVisible(selectIndex);
+        }, KeyStroke.getKeyStroke(KeyEvent.VK_F, MaskCode), JComponent.WHEN_IN_FOCUSED_WINDOW);
         JBScrollPane scrollPane = new JBScrollPane(listView);
         TabInfo tabInfo = new TabInfo(scrollPane);
         tabInfo.setText(type);
