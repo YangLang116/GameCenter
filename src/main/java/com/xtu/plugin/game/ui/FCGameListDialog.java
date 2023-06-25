@@ -38,6 +38,7 @@ public class FCGameListDialog extends DialogWrapper {
     private FCGameListDialog(Project project) {
         super(project, null, false, IdeModalityType.IDE, false);
         this.project = project;
+        setTitle("因游戏太多，无法确保每个游戏可正常运行，对于无法运行的游戏可通过Suggestion联系删除");
         setHorizontalStretch(1.2f);
         setVerticalStretch(1.5f);
         init();
