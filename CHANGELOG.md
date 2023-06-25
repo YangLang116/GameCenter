@@ -3,6 +3,13 @@
 ## [Coming]
 ### Changed
 
+## [1.0.5] - 2023-06-26
+### Changed
+
+## [1.0.5] - 2023-06-25
+### Changed
+- optimize online fc-game
+
 ## [1.0.4] - 2023-06-20
 ### Changed
 - suggestion & feedback
