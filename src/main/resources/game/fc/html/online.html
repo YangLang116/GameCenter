@@ -17,7 +17,7 @@
         });
         let request = new XMLHttpRequest()
         request.overrideMimeType('text/plain; charset=x-user-defined')
-        request.open('get', 'https://game.toolu.cn/{GameFile}')
+        request.open('get', '{GameFile}')
         request.send(null)
         request.onload = function () {
             nes.ui.loadROM(request.responseText)

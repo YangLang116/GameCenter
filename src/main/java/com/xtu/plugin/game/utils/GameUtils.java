@@ -11,13 +11,13 @@ import java.util.Objects;
 
 public class GameUtils {
 
-    public static String getGameOnlineHtml(String title, String gamePath) {
+    public static String getGameOnlineHtml(String title, String gameUrl) {
         String htmlContent = StreamUtils.readTextFromResource("game/fc/html/online.html");
         assert htmlContent != null;
         htmlContent = htmlContent.replace("{title}", title);
         htmlContent = htmlContent.replace("{htmlCss}", getCssStyle());
         htmlContent = htmlContent.replace("{libScript}", getScriptContent());
-        htmlContent = htmlContent.replace("{GameFile}", gamePath);
+        htmlContent = htmlContent.replace("{GameFile}", gameUrl);
         return htmlContent;
     }
 
