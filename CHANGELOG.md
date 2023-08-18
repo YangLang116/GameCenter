@@ -3,10 +3,15 @@
 ## [Coming]
 ### Changed
 
-## [1.0.5] - 2023-06-26
+## [1.0.6] - 2023-08-18
 ### Changed
 
-## [1.0.5] - 2023-06-25
+## [1.0.6] - 2023-08-18
+### Changed
+- optimize advice dialog
+- add `report error`
+
+## [1.0.5] - 2023-06-26
 ### Changed
 - optimize online fc-game
 
