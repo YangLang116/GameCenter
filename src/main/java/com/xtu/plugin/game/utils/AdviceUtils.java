@@ -11,7 +11,9 @@ import java.net.URL;
 public class AdviceUtils {
 
     private static final String APP_KEY = "GameCenter";
-    private static final String sURL = "https://iflutter.toolu.cn/api/advice";
+
+    @SuppressWarnings("HttpUrlsUsage")
+    private static final String sURL = "http://iflutter.toolu.cn/api/advice";
 
     public static void submitData(String title, String content) {
         JSONObject jsonData = new JSONObject();
