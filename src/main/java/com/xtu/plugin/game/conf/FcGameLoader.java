@@ -53,7 +53,7 @@ public class FcGameLoader {
 
     private void loadGame(String config, List<Game> gameList) {
         try {
-            URL url = new URL("https://game.toolu.cn/category/" + config);
+            URL url = new URL("http://game.toolu.cn/category/" + config);
             URLConnection urlConnection = url.openConnection();
             urlConnection.setReadTimeout(5 * 1000);
             urlConnection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
