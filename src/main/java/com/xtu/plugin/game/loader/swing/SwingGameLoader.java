@@ -1,13 +1,10 @@
-package com.xtu.plugin.game.conf;
+package com.xtu.plugin.game.loader.swing;
 
-import com.xtu.plugin.game.utils.StreamUtils;
+import com.xtu.plugin.game.utils.CloseUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 public class SwingGameLoader {
 
@@ -20,7 +17,7 @@ public class SwingGameLoader {
         return sInstance;
     }
 
-    private final Map<String, String> gameList = new HashMap<>();
+    private final List<SwingGame> gameList = new ArrayList<>();
 
     public void load() {
         InputStream configStream = null;
@@ -28,20 +25,21 @@ public class SwingGameLoader {
             configStream = SwingGameLoader.class.getResourceAsStream("/game/swing/conf.properties");
             Properties properties = new Properties();
             properties.load(configStream);
-            Set<Object> keySet = properties.keySet();
-            for (Object key : keySet) {
-                String gameName = key.toString().trim();
-                String mainClass = ((String) properties.get(key)).trim();
-                this.gameList.put(gameName, mainClass);
+            Set<Map.Entry<Object, Object>> entries = properties.entrySet();
+            for (Map.Entry<Object, Object> gameEntry : entries) {
+                String gameName = gameEntry.getKey().toString().trim();
+                String entryClass = gameEntry.getValue().toString().trim();
+                SwingGame game = new SwingGame(gameName, entryClass);
+                this.gameList.add(game);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            //ignore
         } finally {
-            StreamUtils.closeStream(configStream);
+            CloseUtils.close(configStream);
         }
     }
 
-    public Map<String, String> getGameList() {
+    public List<SwingGame> getGameList() {
         return this.gameList;
     }
 }

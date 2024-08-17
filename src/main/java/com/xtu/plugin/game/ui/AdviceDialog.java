@@ -1,5 +1,6 @@
 package com.xtu.plugin.game.ui;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.util.ui.JBUI;
@@ -7,6 +8,7 @@ import com.xtu.plugin.game.utils.AdviceUtils;
 import com.xtu.plugin.game.utils.ToastUtil;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -19,22 +21,22 @@ public class AdviceDialog extends DialogWrapper {
     private JLabel contentLabel;
     private JTextArea contentField;
 
-    public static void show(JComponent parentComponent) {
-        AdviceDialog dialog = new AdviceDialog(parentComponent);
+    public static void show(@NotNull Project project) {
+        AdviceDialog dialog = new AdviceDialog(project);
         boolean isOk = dialog.showAndGet();
         if (!isOk) return;
         String title = dialog.getAdviceTitle();
         String content = dialog.getAdviceContent();
         if (StringUtils.isEmpty(title) || StringUtils.isEmpty(content)) {
-            ToastUtil.make(MessageType.ERROR, "Title or Content is Empty ~");
+            ToastUtil.make(project, MessageType.ERROR, "Title or Content is Empty ~");
             return;
         }
-        AdviceUtils.submitData(title, content);
+        AdviceUtils.submitData(project, title, content);
     }
 
-    private AdviceDialog(JComponent parentComponent) {
-        super(null, parentComponent, false, IdeModalityType.PROJECT);
-        setTitle("Suggestion & Feedback");
+    private AdviceDialog(@NotNull Project project) {
+        super(project, null, false, IdeModalityType.PROJECT);
+        setTitle("Advice");
         initUI();
         init();
     }
@@ -63,10 +65,10 @@ public class AdviceDialog extends DialogWrapper {
     }
 
     private String getAdviceTitle() {
-        return this.titleField.getText();
+        return this.titleField.getText().trim();
     }
 
     private String getAdviceContent() {
-        return this.contentField.getText();
+        return this.contentField.getText().trim();
     }
 }

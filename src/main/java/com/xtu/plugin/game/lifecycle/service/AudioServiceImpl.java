@@ -1,7 +1,7 @@
 package com.xtu.plugin.game.lifecycle.service;
 
 import com.xtu.game.base.service.AudioService;
-import com.xtu.plugin.game.utils.StreamUtils;
+import com.xtu.plugin.game.utils.CloseUtils;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -32,9 +32,9 @@ public class AudioServiceImpl implements AudioService {
             clip.open(audioInputStream);
             clip.start();
         } catch (Exception e) {
-            e.printStackTrace();
+            //ignore
         } finally {
-            StreamUtils.closeStream(inputStream);
+            CloseUtils.close(inputStream);
         }
     }
 

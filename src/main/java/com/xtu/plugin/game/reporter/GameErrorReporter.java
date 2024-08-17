@@ -27,7 +27,7 @@ public class GameErrorReporter extends ErrorReportSubmitter {
     }
 
     @Override
-    public boolean submit(@NotNull IdeaLoggingEvent[] events,
+    public boolean submit(IdeaLoggingEvent @NotNull [] events,
                           @Nullable String additionalInfo,
                           @NotNull Component parentComponent,
                           @NotNull Consumer<? super SubmittedReportInfo> consumer) {
@@ -36,7 +36,7 @@ public class GameErrorReporter extends ErrorReportSubmitter {
         final Project project = CommonDataKeys.PROJECT.getData(context);
         assert project != null;
         final String errorStack = collectErrorStack(events);
-        SubmittedReportInfo.SubmissionStatus status = postErrorMsg(additionalInfo, errorStack);
+        SubmittedReportInfo.SubmissionStatus status = postErrorMsg(project, additionalInfo, errorStack);
         consumer.consume(new SubmittedReportInfo(status));
         return true;
     }
@@ -49,14 +49,15 @@ public class GameErrorReporter extends ErrorReportSubmitter {
         return errorStackInfoBuilder.toString();
     }
 
-    private SubmittedReportInfo.SubmissionStatus postErrorMsg(@Nullable String additionalInfo,
+    private SubmittedReportInfo.SubmissionStatus postErrorMsg(@NotNull Project project,
+                                                              @Nullable String additionalInfo,
                                                               @NotNull String errorInfo) {
         StringBuilder contentSb = new StringBuilder();
         if (additionalInfo != null) {
             contentSb.append("additionalInfo:\n").append(additionalInfo).append("\n\n");
         }
         contentSb.append("errorStack:\n").append(errorInfo);
-        AdviceUtils.submitData("report issue", contentSb.toString());
+        AdviceUtils.submitData(project, "report issue", contentSb.toString());
         return SubmittedReportInfo.SubmissionStatus.NEW_ISSUE;
     }
 }

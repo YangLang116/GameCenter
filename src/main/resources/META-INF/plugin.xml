@@ -4,22 +4,31 @@
     <vendor email="yanglang116@gmail.com">yanglang116@gmail.com</vendor>
     <idea-version since-build="211"/>
     <depends>com.intellij.modules.platform</depends>
-
-    <extensions defaultExtensionNs="com.intellij">
-        <errorHandler implementation="com.xtu.plugin.game.reporter.GameErrorReporter"/>
-    </extensions>
     <applicationListeners>
         <listener topic="com.intellij.ide.AppLifecycleListener"
                   class="com.xtu.plugin.game.lifecycle.AppLifecycleListenerImpl"/>
     </applicationListeners>
+    <extensions defaultExtensionNs="com.intellij">
+        <errorHandler implementation="com.xtu.plugin.game.reporter.GameErrorReporter"/>
+    </extensions>
     <actions>
-        <group id="com.xtu.plugins.game.center.GameCenterActionGroup"
-               class="com.xtu.plugin.game.action.GameCenterActionGroup"
-               popup="true"
+        <group id="com.xtu.plugins.game.group"
                text="Game"
-               description="Power By game center plugin"
-               icon="PluginIcons.LOGO">
+               popup="true"
+               description="Power By Game Center Plugin">
             <add-to-group group-id="MainMenu" relative-to-action="HelpMenu" anchor="after"/>
+            <group id="com.xtu.plugins.game.swing"
+                   class="com.xtu.plugin.game.action.swing.SwingGameGroup"
+                   text="Swing Game"
+                   popup="true"/>
+            <group id="com.xtu.plugins.game.fc"
+                   class="com.xtu.plugin.game.action.fc.FCGameGroup"
+                   text="FC Game"
+                   popup="true"/>
+            <separator/>
+            <action id="com.xtu.plugins.game.advice"
+                    class="com.xtu.plugin.game.action.AdviceAction"
+                    text="Advice"/>
         </group>
     </actions>
 

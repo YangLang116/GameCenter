@@ -2,6 +2,7 @@ package com.xtu.plugin.game.utils;
 
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.io.FileUtil;
 import org.jetbrains.annotations.NotNull;
@@ -11,34 +12,38 @@ import java.util.Objects;
 
 public class GameUtils {
 
-    public static String getGameOnlineHtml(String title, String gameUrl) {
-        String htmlContent = StreamUtils.readTextFromResource("game/fc/html/online.html");
-        assert htmlContent != null;
-        htmlContent = htmlContent.replace("{title}", title);
-        htmlContent = htmlContent.replace("{htmlCss}", getCssStyle());
-        htmlContent = htmlContent.replace("{libScript}", getScriptContent());
-        htmlContent = htmlContent.replace("{GameFile}", gameUrl);
-        return htmlContent;
-    }
-
-    public static String getGameOfflineHtml() {
-        String htmlContent = StreamUtils.readTextFromResource("game/fc/html/offline.html");
-        assert htmlContent != null;
-        htmlContent = htmlContent.replace("{htmlCss}", getCssStyle());
-        htmlContent = htmlContent.replace("{libScript}", getScriptContent());
-        return htmlContent;
-    }
-
-    public static void openGameWithBrowser(String gameContent, String fileName) {
+    public static void openGameWithBrowser(@NotNull Project project,
+                                           @NotNull String gameContent,
+                                           @NotNull String fileName) {
         final String gameTempDir = PathManager.getTempPath();
         final File gameFile = new File(gameTempDir, fileName);
         try {
             FileUtil.writeToFile(gameFile, gameContent);
             BrowserUtil.browse(gameFile);
         } catch (Exception e) {
-            e.printStackTrace();
-            ToastUtil.make(MessageType.ERROR, e.getMessage());
+            ToastUtil.make(project, MessageType.ERROR, e.getMessage());
         }
+    }
+
+    @NotNull
+    public static String getGameOnlineHtml(String title, String url) {
+        String htmlContent = StreamUtils.readTextFromResource("game/fc/html/online.html");
+        assert htmlContent != null;
+        String gameUrl = "https://gitee.com/YangLang116/nes-game-list/raw/config/nes_list/" + url;
+        return htmlContent
+                .replace("{title}", title)
+                .replace("{htmlCss}", getCssStyle())
+                .replace("{libScript}", getScriptContent())
+                .replace("{GameFile}", gameUrl);
+    }
+
+    @NotNull
+    public static String getGameOfflineHtml() {
+        String htmlContent = StreamUtils.readTextFromResource("game/fc/html/offline.html");
+        assert htmlContent != null;
+        return htmlContent
+                .replace("{htmlCss}", getCssStyle())
+                .replace("{libScript}", getScriptContent());
     }
 
     @NotNull

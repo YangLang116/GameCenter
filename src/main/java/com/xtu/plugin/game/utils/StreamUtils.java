@@ -1,43 +1,39 @@
 package com.xtu.plugin.game.utils;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 public class StreamUtils {
 
-    public static void closeStream(Closeable stream) {
-        if (stream != null) {
-            try {
-                stream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
+    @Nullable
     public static String readTextFromResource(@NotNull String name) {
-        InputStream resourceAsStream = StreamUtils.class.getClassLoader().getResourceAsStream(name);
-        if (resourceAsStream == null) return null;
-        return readFromStream(resourceAsStream);
+        InputStream stream = StreamUtils.class.getClassLoader().getResourceAsStream(name);
+        if (stream == null) return null;
+        return readFromStream(stream);
     }
 
+    @Nullable
     public static String readFromStream(@NotNull InputStream inputStream) {
         ByteArrayOutputStream outputStream = null;
         try {
             outputStream = new ByteArrayOutputStream();
-            int len = 0;
+            int len;
             byte[] buffer = new byte[1024];
             while ((len = inputStream.read(buffer)) != -1) {
                 outputStream.write(buffer, 0, len);
             }
             return outputStream.toString(StandardCharsets.UTF_8);
         } catch (Exception e) {
-            return "";
+            return null;
         } finally {
-            closeStream(inputStream);
-            closeStream(outputStream);
+            CloseUtils.close(inputStream);
+            CloseUtils.close(outputStream);
         }
     }
 
@@ -46,7 +42,7 @@ public class StreamUtils {
             outputStream.write(dataStr.getBytes(StandardCharsets.UTF_8));
             outputStream.flush();
         } finally {
-            closeStream(outputStream);
+            CloseUtils.close(outputStream);
         }
     }
 }

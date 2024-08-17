@@ -5,10 +5,10 @@ import com.xtu.game.base.GameCenterFacade;
 import com.xtu.game.base.GameCenterServiceProvider;
 import com.xtu.game.base.service.AudioService;
 import com.xtu.game.base.service.StorageService;
-import com.xtu.plugin.game.conf.FcGameLoader;
-import com.xtu.plugin.game.conf.SwingGameLoader;
 import com.xtu.plugin.game.lifecycle.service.AudioServiceImpl;
 import com.xtu.plugin.game.lifecycle.service.StorageServiceImpl;
+import com.xtu.plugin.game.loader.fc.FCGameLoader;
+import com.xtu.plugin.game.loader.swing.SwingGameLoader;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -32,6 +32,6 @@ public class AppLifecycleListenerImpl implements AppLifecycleListener {
             }
         });
         SwingGameLoader.getInstance().load();
-        FcGameLoader.getInstance().load();
+        FCGameLoader.getInstance().load();
     }
 }

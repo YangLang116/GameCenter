@@ -1,7 +1,9 @@
 package com.xtu.plugin.game.utils;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.SystemInfo;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -15,25 +17,30 @@ public class AdviceUtils {
     @SuppressWarnings("HttpUrlsUsage")
     private static final String sURL = "http://iflutter.toolu.cn/api/advice";
 
-    public static void submitData(String title, String content) {
+    public static void submitData(@NotNull Project project,
+                                  @NotNull String title,
+                                  @NotNull String content) {
         JSONObject jsonData = new JSONObject();
         jsonData.put("title", title);
         jsonData.put("content", content);
         jsonData.put("app_key", APP_KEY);
         jsonData.put("os", SystemInfo.getOsNameAndVersion());
         jsonData.put("version", VersionUtils.getPluginVersion());
-        String dataStr = jsonData.toString();
+        sendData(project, jsonData.toString());
+    }
+
+    private static void sendData(@NotNull Project project, @NotNull String data) {
         try {
             URL url = new URL(sURL);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setReadTimeout(5 * 1000);
             urlConnection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+            urlConnection.setReadTimeout(5 * 1000);
             urlConnection.setDoOutput(true);
-            StreamUtils.writeToStream(urlConnection.getOutputStream(), dataStr);
+            StreamUtils.writeToStream(urlConnection.getOutputStream(), data);
             urlConnection.getResponseCode();
-            ToastUtil.make(MessageType.INFO, "thank you for submitting ~");
+            ToastUtil.make(project, MessageType.INFO, "thank you for submitting ~");
         } catch (IOException e) {
-            ToastUtil.make(MessageType.ERROR, e.getMessage());
+            ToastUtil.make(project, MessageType.ERROR, e.getMessage());
         }
     }
 }

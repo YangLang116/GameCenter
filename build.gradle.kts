@@ -4,10 +4,15 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 fun properties(key: String) = project.findProperty(key).toString()
 
 plugins {
+    // Java support
     id("java")
+    // Kotlin support
     id("org.jetbrains.kotlin.jvm") version "1.5.30"
-    id("org.jetbrains.intellij") version "1.3.1"
+    // Gradle IntelliJ Plugin
+    id("org.jetbrains.intellij") version "1.11.0"
+    // Gradle Changelog Plugin
     id("org.jetbrains.changelog") version "1.3.0"
+    // Gradle Qodana Plugin
     id("org.jetbrains.qodana") version "0.1.12"
 }
 
@@ -20,6 +25,7 @@ repositories {
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+    implementation("net.coobird:thumbnailator:0.4.20")
 }
 
 intellij {
@@ -34,11 +40,11 @@ intellij {
 changelog {
     version.set(properties("pluginVersion"))
     path.set("${project.projectDir}/CHANGELOG.md")
-    header.set(provider { "[${version.get()}] - ${org.jetbrains.changelog.date()}" })
+    header.set(provider { "[${version.get()}]" })
     itemPrefix.set("-")
     keepUnreleasedSection.set(true)
     unreleasedTerm.set("[Coming]")
-    groups.set(listOf("Changed"))
+    groups.set(listOf(""))
 }
 
 qodana {
@@ -97,14 +103,7 @@ tasks {
         channels.set(listOf(properties("pluginVersion").split('-').getOrElse(1) { "default" }.split('.').first()))
     }
     runIde {
-        jbrVersion.set("11_0_10b1145.115")
-        ideDir.set(file("/Applications/Android Studio Preview.app/Contents"))
+        ideDir.set(file(properties("idePath")))
     }
 }
 
-tasks.findByName("buildPlugin")?.doLast {
-    copy {
-        from("build/distributions/GameCenter-${version}.zip")
-        into("plugin-version/")
-    }
-}
