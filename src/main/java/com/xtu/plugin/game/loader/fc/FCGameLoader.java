@@ -2,16 +2,14 @@ package com.xtu.plugin.game.loader.fc;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import com.xtu.plugin.game.constant.GameConst;
 import com.xtu.plugin.game.utils.StreamUtils;
 import org.apache.xerces.impl.dv.util.Base64;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,44 +39,50 @@ public class FCGameLoader {
     public final List<FCGame> simGameList = new ArrayList<>();
 
     public void load() {
+        initGame("nes_action.txt", actionGameList);
+        initGame("nes_adventure.txt", adventureGameList);
+        initGame("nes_chess.txt", chessGameList);
+        initGame("nes_collection.txt", comGameList);
+        initGame("nes_desktop.txt", tableGameList);
+        initGame("nes_edu.txt", puzzleGameList);
+        initGame("nes_racing.txt", racingGameList);
+        initGame("nes_roleplay.txt", rolePlayGameList);
+        initGame("nes_shooter.txt", shooterGameList);
+        initGame("nes_sports.txt", sportGameList);
+        initGame("nes_strategy.txt", strategyGameList);
+        initGame("nes_strategy_simulation.txt", simGameList);
+    }
+
+    private void initGame(@NotNull String config, @NotNull List<FCGame> gameList) {
         Application application = ApplicationManager.getApplication();
         application.executeOnPooledThread(() -> {
-            loadGame("nes_action.txt", actionGameList);
-            loadGame("nes_adventure.txt", adventureGameList);
-            loadGame("nes_chess.txt", chessGameList);
-            loadGame("nes_collection.txt", comGameList);
-            loadGame("nes_desktop.txt", tableGameList);
-            loadGame("nes_edu.txt", puzzleGameList);
-            loadGame("nes_racing.txt", racingGameList);
-            loadGame("nes_roleplay.txt", rolePlayGameList);
-            loadGame("nes_shooter.txt", shooterGameList);
-            loadGame("nes_sports.txt", sportGameList);
-            loadGame("nes_strategy.txt", strategyGameList);
-            loadGame("nes_strategy_simulation.txt", simGameList);
+            List<FCGame> fcGames = loadGame(config);
+            if (fcGames == null) return;
+            application.invokeLater(() -> gameList.addAll(fcGames));
         });
     }
 
-    private void loadGame(String config, List<FCGame> gameList) {
-        try {
-            URL url = new URL("https://gitee.com/YangLang116/nes-game-list/raw/config/category/" + config);
-            URLConnection urlConnection = url.openConnection();
-            urlConnection.setReadTimeout(5 * 1000);
-            urlConnection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
-            InputStream inputStream = urlConnection.getInputStream();
-            String content = StreamUtils.readFromStream(inputStream);
-            if (content == null) return;
-            String jsonStr = new String(Base64.decode(content), StandardCharsets.UTF_8);
-            JSONArray gameJsonArray = new JSONArray(jsonStr);
-            for (int i = 0; i < gameJsonArray.length(); i++) {
-                JSONObject gameObj = (JSONObject) gameJsonArray.get(i);
-                String game_name = gameObj.optString("name");
-                String game_desc = gameObj.optString("desc");
-                String game_icon = gameObj.optString("icon");
-                String game_url = gameObj.optString("url");
-                gameList.add(new FCGame(game_name, game_desc, game_icon, game_url));
-            }
-        } catch (IOException e) {
-            //ignore
+    @Nullable
+    private List<FCGame> loadGame(@NotNull String configFile) {
+        String url = GameConst.PREFIX_CONFIG + configFile;
+        String content = StreamUtils.readTextFromUrl(url, "application/json;charset=UTF-8");
+        if (content == null) return null;
+        return parseGameList(content);
+    }
+
+    @NotNull
+    private static List<FCGame> parseGameList(@NotNull String content) {
+        List<FCGame> gameList = new ArrayList<>();
+        String jsonStr = new String(Base64.decode(content));
+        JSONArray gameJsonArray = new JSONArray(jsonStr);
+        for (int i = 0; i < gameJsonArray.length(); i++) {
+            JSONObject gameObj = (JSONObject) gameJsonArray.get(i);
+            String game_name = gameObj.optString("name");
+            String game_desc = gameObj.optString("desc");
+            String game_icon = gameObj.optString("icon");
+            String game_url = gameObj.optString("url");
+            gameList.add(new FCGame(game_name, game_desc, game_icon, game_url));
         }
+        return gameList;
     }
 }

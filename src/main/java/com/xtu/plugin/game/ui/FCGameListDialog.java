@@ -4,7 +4,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.SystemInfo;
-import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.jcef.JBCefApp;
 import com.intellij.ui.tabs.JBTabs;
@@ -13,8 +12,8 @@ import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.util.ui.JBUI;
 import com.xtu.plugin.game.loader.fc.FCGame;
 import com.xtu.plugin.game.loader.fc.FCGameLoader;
-import com.xtu.plugin.game.ui.render.FCGameCellRender;
-import com.xtu.plugin.game.utils.GameUtils;
+import com.xtu.plugin.game.manager.GameManager;
+import com.xtu.plugin.game.ui.render.FCGameCellComponent;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -24,11 +23,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.List;
 
-public class FCGameListDialog extends DialogWrapper {
+public class FCGameListDialog extends DialogWrapper implements FCGameCellComponent.OnItemClickListener {
 
     private final Project project;
 
@@ -41,7 +38,7 @@ public class FCGameListDialog extends DialogWrapper {
         super(project, null, false, IdeModalityType.PROJECT, false);
         this.project = project;
         setTitle("Game List");
-        setSize(360, 520);
+        setSize(180, 520);
         init();
     }
 
@@ -53,15 +50,16 @@ public class FCGameListDialog extends DialogWrapper {
     @Override
     protected @Nullable JComponent createCenterPanel() {
         JPanel contentPanel = new JPanel(new BorderLayout());
-        contentPanel.add(createTipLabel(), BorderLayout.NORTH);
         contentPanel.add(getGameTabView(), BorderLayout.CENTER);
+        contentPanel.add(createTipLabel(), BorderLayout.SOUTH);
         return contentPanel;
     }
 
     @NotNull
     private JLabel createTipLabel() {
         JLabel tip = new JLabel("Because there are too many games, we cannot ensure that every game can run normally. ");
-        tip.setBorder(JBUI.Borders.empty(5, 0));
+        tip.setFont(new Font(null, Font.BOLD, JBUI.scaleFontSize(12f)));
+        tip.setBorder(JBUI.Borders.empty(10, 5));
         return tip;
     }
 
@@ -86,18 +84,10 @@ public class FCGameListDialog extends DialogWrapper {
 
     @NotNull
     private TabInfo createGameTabInfo(String type, @NotNull List<FCGame> gameList) {
-        final JBList<FCGame> listView = new JBList<>();
-        DefaultListModel<FCGame> listModel = new DefaultListModel<>();
-        listModel.addAll(gameList);
-        listView.setModel(listModel);
-        listView.setCellRenderer(new FCGameCellRender());
-        listView.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int index = listView.locationToIndex(e.getPoint());
-                onGameItemClick(index, gameList);
-            }
-        });
+        final Box listView = Box.createVerticalBox();
+        for (FCGame fcGame : gameList) {
+            listView.add(new FCGameCellComponent(fcGame, this));
+        }
         int MaskCode = SystemInfo.isMac ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK;
         listView.registerKeyboardAction(e -> doSearch(listView, gameList),
                 KeyStroke.getKeyStroke(KeyEvent.VK_F, MaskCode),
@@ -108,7 +98,7 @@ public class FCGameListDialog extends DialogWrapper {
         return tabInfo;
     }
 
-    private void doSearch(@NotNull JBList<FCGame> listView, @NotNull List<FCGame> gameList) {
+    private void doSearch(@NotNull Box listView, @NotNull List<FCGame> gameList) {
         String searchKey = Messages.showInputDialog("", "Enter Game Name", Messages.getInformationIcon());
         if (StringUtils.isEmpty(searchKey)) return;
         int selectIndex = -1;
@@ -120,19 +110,20 @@ public class FCGameListDialog extends DialogWrapper {
             }
         }
         if (selectIndex == -1) return;
-        listView.setSelectedIndex(selectIndex);
-        listView.ensureIndexIsVisible(selectIndex);
+        Component component = listView.getComponent(selectIndex);
+        Rectangle bounds = component.getBounds();
+        listView.scrollRectToVisible(bounds);
     }
 
-    private void onGameItemClick(int index, @NotNull List<FCGame> gameList) {
-        if (index < 0 || index >= gameList.size()) return;
-        close(DialogWrapper.OK_EXIT_CODE);
-        FCGame selectedGame = gameList.get(index);
-        String gameContent = GameUtils.getGameOnlineHtml(selectedGame.name, selectedGame.url);
-        if (JBCefApp.isSupported()) {
-            FCGamePlayDialog.play(project, selectedGame.name, gameContent);
-        } else {
-            GameUtils.openGameWithBrowser(project, gameContent, "online.html");
-        }
+    @Override
+    public void onClick(@NotNull FCGame game) {
+        close(DialogWrapper.CLOSE_EXIT_CODE);
+        GameManager.getGameOnlineHtml(game, html -> {
+            if (JBCefApp.isSupported()) {
+                FCGamePlayDialog.play(project, game.name, html);
+            } else {
+                GameManager.openGameWithBrowser(project, "online.html", html);
+            }
+        });
     }
 }

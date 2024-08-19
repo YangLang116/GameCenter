@@ -17,7 +17,7 @@
         });
         let request = new XMLHttpRequest()
         request.overrideMimeType('text/plain; charset=x-user-defined')
-        request.open('get', '{GameFile}')
+        request.open('get', '{gameUrl}')
         request.send(null)
         request.onload = function () {
             nes.ui.loadROM(request.responseText)

@@ -7,9 +7,26 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 
 public class StreamUtils {
+
+    @Nullable
+    public static String readTextFromUrl(@NotNull String url, @NotNull String contentType) {
+        try {
+            URL netUrl = new URL(url);
+            URLConnection urlConnection = netUrl.openConnection();
+            urlConnection.setReadTimeout(5 * 1000);
+            urlConnection.setRequestProperty("Content-Type", contentType);
+            InputStream inputStream = urlConnection.getInputStream();
+            return readFromStream(inputStream);
+        } catch (IOException e) {
+            LogUtils.error("StreamUtils", e);
+            return null;
+        }
+    }
 
     @Nullable
     public static String readTextFromResource(@NotNull String name) {
