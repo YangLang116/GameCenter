@@ -2,7 +2,11 @@ package com.xtu.plugin.game.loader.fc;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.Task;
 import com.xtu.plugin.game.constant.GameConst;
+import com.xtu.plugin.game.loader.fc.entity.FCGame;
+import com.xtu.plugin.game.loader.fc.entity.FCGameCategory;
 import com.xtu.plugin.game.utils.StreamUtils;
 import org.apache.xerces.impl.dv.util.Base64;
 import org.jetbrains.annotations.NotNull;
@@ -10,10 +14,11 @@ import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-@SuppressWarnings("SpellCheckingInspection")
 public class FCGameLoader {
 
     private FCGameLoader() {
@@ -25,64 +30,71 @@ public class FCGameLoader {
         return sInstance;
     }
 
-    public final List<FCGame> actionGameList = new ArrayList<>();
-    public final List<FCGame> adventureGameList = new ArrayList<>();
-    public final List<FCGame> chessGameList = new ArrayList<>();
-    public final List<FCGame> comGameList = new ArrayList<>();
-    public final List<FCGame> tableGameList = new ArrayList<>();
-    public final List<FCGame> puzzleGameList = new ArrayList<>();
-    public final List<FCGame> racingGameList = new ArrayList<>();
-    public final List<FCGame> rolePlayGameList = new ArrayList<>();
-    public final List<FCGame> shooterGameList = new ArrayList<>();
-    public final List<FCGame> sportGameList = new ArrayList<>();
-    public final List<FCGame> strategyGameList = new ArrayList<>();
-    public final List<FCGame> simGameList = new ArrayList<>();
+    private final List<FCGameCategory> categoryList = new ArrayList<>();
 
     public void load() {
-        initGame("nes_action.txt", actionGameList);
-        initGame("nes_adventure.txt", adventureGameList);
-        initGame("nes_chess.txt", chessGameList);
-        initGame("nes_collection.txt", comGameList);
-        initGame("nes_desktop.txt", tableGameList);
-        initGame("nes_edu.txt", puzzleGameList);
-        initGame("nes_racing.txt", racingGameList);
-        initGame("nes_roleplay.txt", rolePlayGameList);
-        initGame("nes_shooter.txt", shooterGameList);
-        initGame("nes_sports.txt", sportGameList);
-        initGame("nes_strategy.txt", strategyGameList);
-        initGame("nes_strategy_simulation.txt", simGameList);
-    }
-
-    private void initGame(@NotNull String config, @NotNull List<FCGame> gameList) {
         Application application = ApplicationManager.getApplication();
         application.executeOnPooledThread(() -> {
-            List<FCGame> fcGames = loadGame(config);
-            if (fcGames == null) return;
-            application.invokeLater(() -> gameList.addAll(fcGames));
+            Map<String, String> configList = StreamUtils.loadConfig("/game/fc/conf.properties");
+            assert configList != null;
+            List<FCGameCategory> categories = new ArrayList<>();
+            for (Map.Entry<String, String> entry : configList.entrySet()) {
+                FCGameCategory category = new FCGameCategory(entry.getKey(), entry.getValue());
+                categories.add(category);
+            }
+            application.invokeLater(() -> {
+                categoryList.addAll(categories);
+                for (FCGameCategory category : categories) {
+                    loadGame(category);
+                }
+            });
         });
     }
 
+    public void loadGame(@NotNull FCGameCategory category) {
+        Application application = ApplicationManager.getApplication();
+        String loadTitle = String.format("Loading %s Games", category.name);
+        new Task.Backgroundable(null, loadTitle, false) {
+            @Override
+            public void run(@NotNull ProgressIndicator indicator) {
+                indicator.setIndeterminate(true);
+                List<FCGame> fcGames = requestGame(category.path);
+                if (fcGames == null) return;
+                application.invokeLater(() -> category.updateGames(fcGames));
+            }
+        }.queue();
+    }
+
     @Nullable
-    private List<FCGame> loadGame(@NotNull String configFile) {
-        String url = GameConst.PREFIX_CONFIG + configFile;
-        String content = StreamUtils.readTextFromUrl(url, "application/json;charset=UTF-8");
-        if (content == null) return null;
-        return parseGameList(content);
+    private List<FCGame> requestGame(@NotNull String path) {
+        byte[] data = StreamUtils.readDataFromUrl(GameConst.PREFIX_CONFIG + path);
+        if (data == null) return null;
+        String base64Str = new String(data, StandardCharsets.UTF_8);
+        return parseGameList(base64Str);
+    }
+
+    @Nullable
+    private static List<FCGame> parseGameList(@NotNull String base64Str) {
+        try {
+            String jsonStr = new String(Base64.decode(base64Str));
+            JSONArray gameJsonArray = new JSONArray(jsonStr);
+            List<FCGame> gameList = new ArrayList<>();
+            for (int i = 0; i < gameJsonArray.length(); i++) {
+                JSONObject gameObj = (JSONObject) gameJsonArray.get(i);
+                String name = gameObj.optString("name");
+                String desc = gameObj.optString("desc");
+                String icon = gameObj.optString("icon");
+                String url = gameObj.optString("url");
+                gameList.add(new FCGame(name, desc, icon, url));
+            }
+            return gameList;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @NotNull
-    private static List<FCGame> parseGameList(@NotNull String content) {
-        List<FCGame> gameList = new ArrayList<>();
-        String jsonStr = new String(Base64.decode(content));
-        JSONArray gameJsonArray = new JSONArray(jsonStr);
-        for (int i = 0; i < gameJsonArray.length(); i++) {
-            JSONObject gameObj = (JSONObject) gameJsonArray.get(i);
-            String game_name = gameObj.optString("name");
-            String game_desc = gameObj.optString("desc");
-            String game_icon = gameObj.optString("icon");
-            String game_url = gameObj.optString("url");
-            gameList.add(new FCGame(game_name, game_desc, game_icon, game_url));
-        }
-        return gameList;
+    public List<FCGameCategory> getCategoryList() {
+        return categoryList;
     }
 }

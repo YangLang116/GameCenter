@@ -1,4 +1,4 @@
-package com.xtu.plugin.game.loader.fc;
+package com.xtu.plugin.game.loader.fc.entity;
 
 @SuppressWarnings("ClassCanBeRecord")
 public final class FCGame {

@@ -1,9 +1,11 @@
 package com.xtu.plugin.game.constant;
 
-@SuppressWarnings("SpellCheckingInspection")
 public class GameConst {
 
-    private static final String HOST = "https://cdn.jsdelivr.net/gh/YangLang116/nes-game-list@config";
-    public static final String PREFIX_CONFIG = HOST + "/category/";
-    public static final String PREFIX_RES = HOST + "/nes_list/";
+    public static final String TIP = "Because there are too many games, we cannot ensure that every game can run normally. ";
+    public static final String REPO = "https://github.com/YangLang116/nes-game-list";
+    //Gite~e~ 仅作为静态资源服务器
+    public static final String PREFIX_FILE = "https://gitee.com/YangLang116/nes-game-list/raw/config";
+    public static final String PREFIX_CONFIG = PREFIX_FILE + "/category/";
+    public static final String PREFIX_RES = PREFIX_FILE + "/nes_list/";
 }

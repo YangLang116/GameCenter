@@ -17,7 +17,6 @@ public class AppLifecycleListenerImpl implements AppLifecycleListener {
 
     @Override
     public void appFrameCreated(@NotNull List<String> commandLineArgs) {
-        //注册服务
         GameCenterFacade gameCenterFacade = GameCenterFacade.getInstance();
         gameCenterFacade.injectService(AudioService.class, new GameCenterServiceProvider<>() {
             @Override

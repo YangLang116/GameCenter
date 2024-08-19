@@ -15,13 +15,8 @@
         let nes = new JSNES({
             'ui': $('#emulator').JSNESUI(),
         });
-        let request = new XMLHttpRequest()
-        request.overrideMimeType('text/plain; charset=x-user-defined')
-        request.open('get', '{gameUrl}')
-        request.send(null)
-        request.onload = function () {
-            nes.ui.loadROM(request.responseText)
-        }
+        const base64Data = '{gameContent}'
+        nes.ui.loadROM(atob(base64Data))
     });
 </script>
 </html>

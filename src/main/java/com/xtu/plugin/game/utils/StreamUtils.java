@@ -10,33 +10,60 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 public class StreamUtils {
 
     @Nullable
-    public static String readTextFromUrl(@NotNull String url, @NotNull String contentType) {
+    public static Map<String, String> loadConfig(@NotNull String path) {
+        InputStream configStream = null;
+        try {
+            configStream = StreamUtils.class.getResourceAsStream(path);
+            Properties properties = new Properties();
+            properties.load(configStream);
+            Set<Map.Entry<Object, Object>> entries = properties.entrySet();
+            Map<String, String> pairList = new HashMap<>();
+            for (Map.Entry<Object, Object> entry : entries) {
+                String key = entry.getKey().toString().trim();
+                String value = entry.getValue().toString().trim();
+                pairList.put(key, value);
+            }
+            return pairList;
+        } catch (IOException e) {
+            LogUtils.error("StreamUtils", e);
+            return null;
+        } finally {
+            CloseUtils.close(configStream);
+        }
+    }
+
+    public static byte[] readDataFromUrl(@NotNull String url) {
         try {
             URL netUrl = new URL(url);
             URLConnection urlConnection = netUrl.openConnection();
             urlConnection.setReadTimeout(5 * 1000);
-            urlConnection.setRequestProperty("Content-Type", contentType);
+            urlConnection.setRequestProperty("Content-Type", "text/plain;charset=UTF-8");
             InputStream inputStream = urlConnection.getInputStream();
             return readFromStream(inputStream);
         } catch (IOException e) {
-            LogUtils.error("StreamUtils", e);
             return null;
         }
     }
 
     @Nullable
     public static String readTextFromResource(@NotNull String name) {
-        InputStream stream = StreamUtils.class.getClassLoader().getResourceAsStream(name);
+        InputStream stream = StreamUtils.class.getResourceAsStream(name);
         if (stream == null) return null;
-        return readFromStream(stream);
+        byte[] data = readFromStream(stream);
+        if (data == null) return null;
+        return new String(data, StandardCharsets.UTF_8);
     }
 
-    @Nullable
-    public static String readFromStream(@NotNull InputStream inputStream) {
+
+    public static byte[] readFromStream(@NotNull InputStream inputStream) {
         ByteArrayOutputStream outputStream = null;
         try {
             outputStream = new ByteArrayOutputStream();
@@ -45,7 +72,7 @@ public class StreamUtils {
             while ((len = inputStream.read(buffer)) != -1) {
                 outputStream.write(buffer, 0, len);
             }
-            return outputStream.toString(StandardCharsets.UTF_8);
+            return outputStream.toByteArray();
         } catch (Exception e) {
             return null;
         } finally {

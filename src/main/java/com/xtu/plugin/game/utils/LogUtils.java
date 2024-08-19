@@ -12,7 +12,7 @@ public class LogUtils {
 
     public static void error(@NotNull String entryPoint,
                              @NotNull Exception exception) {
-        LOG.error(entryPoint + " : " + exception.getMessage());
+        System.out.println(entryPoint + " : " + exception.getMessage());
         String content = "message: \n" + exception.getMessage() + "\n" +
                 "stackTrace: \n" + getStackTrace(exception);
         AdviceUtils.submitData(null, "error catch", content);

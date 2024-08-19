@@ -3,11 +3,11 @@ package com.xtu.plugin.game.action.fc.action;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.xtu.plugin.game.constant.GameConst;
 import org.jetbrains.annotations.NotNull;
 
 public final class FCGameUploadAction extends AnAction {
 
-    private static final String REPO = "https://github.com/YangLang116/nes-game-list";
 
     public FCGameUploadAction() {
         super("Upload");
@@ -15,6 +15,6 @@ public final class FCGameUploadAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
-        BrowserUtil.open(REPO);
+        BrowserUtil.open(GameConst.REPO);
     }
 }
