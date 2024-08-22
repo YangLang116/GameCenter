@@ -2,16 +2,7 @@
 GameCenter is an IDEA Plugin for Developer to play Games
 <!-- Plugin description end -->
 
-![platforms](https://img.shields.io/badge/platforms-macos%20%7C%20windows%20%7C%20linux-blue) 
-![tools](https://img.shields.io/badge/idea-intellij_IDEA%20%7C%20AndroidStudio-blue) 
-![licence](https://img.shields.io/badge/licence-MIT-blue) 
-![downloads](https://img.shields.io/jetbrains/plugin/d/19259)
-![version](https://img.shields.io/jetbrains/plugin/v/19259)
-
-## 插件使用
-[GameCenter](https://github.com/YangLang116/GameCenter):支持IDEA中展示游戏菜单  
-插件安装：插件已上传官方Plugins仓库，可搜索 `GameCenter` 下载  
-使用文档：[点击跳转](http://iflutter.toolu.cn/content/chapter-8/part-1.html)
+![platforms](https://img.shields.io/badge/platforms-macos%20%7C%20windows%20%7C%20linux-blue) ![tools](https://img.shields.io/badge/idea-intellij_IDEA%20%7C%20AndroidStudio-blue) ![licence](https://img.shields.io/badge/licence-MIT-blue) ![version](https://img.shields.io/badge/version-v1.0.1-blue)
 
 ## 项目说明
 
@@ -19,13 +10,13 @@ GameCenter is an IDEA Plugin for Developer to play Games
 
 ## 使用截图
 
-![plugin display](http://iflutter.toolu.cn/configs/game_display.png)
+![plugin display](../../configs/game_display.png)
 
 ## 游戏列表
 
 - FlappyBird - 从项目 [FlappyBird](https://github.com/kingyuluk/FlappyBird) 进行移植
 
-- FC游戏 - [游戏清单](http://game.toolu.cn/conf.json) 按键说明如下：  
+- FC游戏 - [游戏清单](https://github.com/YangLang116/nes-game-list) 按键说明如下：
 
 | 按键 | player1 | player2 |
 | :----: | :----: | :----: |  
@@ -39,8 +30,15 @@ GameCenter is an IDEA Plugin for Developer to play Games
 | Select | Tab |	Num-7 |
 
 ## 重点说明
-如果当前IDEA支持 [JCEF](https://plugins.jetbrains.com/docs/intellij/jcef.html) ，FC游戏会在IDEA中直接打开，否则只能借助系统浏览器运行。
-默认情况下，Intellij IDEA 支持JCEF的，而AndroidStudio 不支持，如果想要打开IDEA的JCEF功能，请参考文档 [如何打开JCEF?](https://www.jianshu.com/p/68056562d1c4) 
+
+### JCEF
+如果当前IDEA支持 [JCEF](https://plugins.jetbrains.com/docs/intellij/jcef.html) ，FC游戏会在IDEA中直接打开，否则只能借助系统浏览器运行。 默认情况下，Intellij IDEA 支持JCEF的，而AndroidStudio 不支持，如果想要打开IDEA的JCEF功能，请参考文档 [如何打开JCEF?](https://www.jianshu.com/p/68056562d1c4)
+
+### 游戏乱码
+点击主菜单栏 `Help` > `Edit Custom VM Options` 入口，并在弹窗中添加以下配置：
+```
+-Dfile.encoding=UTF-8
+```
 
 ---
 
@@ -50,7 +48,7 @@ GameCenter is an IDEA Plugin for Developer to play Games
 
 ### 开发环境要求
 
-- java 11
+- java 17
 
 ### 开发步骤
 
@@ -84,8 +82,8 @@ audioService.play(audioStream);
 - 4、将编写的Swing游戏导出成jar文件
 
 - 5、注入游戏到 `Game Center` IDEA插件
-    - 将第4步生成的jar，放入项目根目录的`libs`文件夹
-    - 在`src/main/resources/game/swing/conf.properties` 中配置游戏，格式如下：
+  - 将第4步生成的jar，放入项目根目录的`libs`文件夹
+  - 在`src/main/resources/game/swing/conf.properties` 中配置游戏，格式如下：
 
   ```
   Game Name=runGame 函数所在的类的FQN，例如：FlyBird=com.kingyu.flappybird.app.App

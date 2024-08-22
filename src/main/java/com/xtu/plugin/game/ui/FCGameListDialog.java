@@ -34,15 +34,17 @@ import java.util.List;
 public class FCGameListDialog extends DialogWrapper implements FCGameCellComponent.OnItemClickListener {
 
     private final Project project;
+    private final List<FCGameCategory> categoryList;
 
-    public static void show(@NotNull Project project) {
-        FCGameListDialog dialog = new FCGameListDialog(project);
+    public static void show(@NotNull Project project, @NotNull List<FCGameCategory> categoryList) {
+        FCGameListDialog dialog = new FCGameListDialog(project, categoryList);
         dialog.show();
     }
 
-    private FCGameListDialog(@NotNull Project project) {
+    private FCGameListDialog(@NotNull Project project, @NotNull List<FCGameCategory> categoryList) {
         super(project, null, false, IdeModalityType.PROJECT, false);
         this.project = project;
+        this.categoryList = categoryList;
         setTitle("Game List");
         setSize(180, 520);
         init();
@@ -73,7 +75,6 @@ public class FCGameListDialog extends DialogWrapper implements FCGameCellCompone
     @NotNull
     private JComponent getGameTabView() {
         JBTabs tabs = new JBTabsImpl(project);
-        List<FCGameCategory> categoryList = FCGameLoader.getInstance().getCategoryList();
         for (FCGameCategory category : categoryList) {
             TabInfo tabInfo = new TabInfo(buildContentPanel(category));
             tabInfo.setText(category.name);
