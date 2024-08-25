@@ -19,10 +19,10 @@
         let nes = new JSNES({
             'ui': $('#emulator').JSNESUI(),
         });
-        $('#chooseFile').bind("change", function(evt){
+        $('#chooseFile').bind("change", function (evt) {
             let input = evt.target;
-            if (input.files.length == 0) {
-              return;
+            if (input.files.length === 0) {
+                return;
             }
             const file = input.files[0];
             const reader = new FileReader();

@@ -17,8 +17,8 @@ import com.xtu.plugin.game.loader.fc.FCGameLoader;
 import com.xtu.plugin.game.loader.fc.entity.FCGame;
 import com.xtu.plugin.game.loader.fc.entity.FCGameCategory;
 import com.xtu.plugin.game.manager.GameManager;
+import com.xtu.plugin.game.utils.StringUtils;
 import com.xtu.plugin.game.utils.ToastUtil;
-import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,17 +34,15 @@ import java.util.List;
 public class FCGameListDialog extends DialogWrapper implements FCGameCellComponent.OnItemClickListener {
 
     private final Project project;
-    private final List<FCGameCategory> categoryList;
 
-    public static void show(@NotNull Project project, @NotNull List<FCGameCategory> categoryList) {
-        FCGameListDialog dialog = new FCGameListDialog(project, categoryList);
+    public static void show(@NotNull Project project) {
+        FCGameListDialog dialog = new FCGameListDialog(project);
         dialog.show();
     }
 
-    private FCGameListDialog(@NotNull Project project, @NotNull List<FCGameCategory> categoryList) {
+    private FCGameListDialog(@NotNull Project project) {
         super(project, null, false, IdeModalityType.PROJECT, false);
         this.project = project;
-        this.categoryList = categoryList;
         setTitle("Game List");
         setSize(180, 520);
         init();
@@ -75,6 +73,7 @@ public class FCGameListDialog extends DialogWrapper implements FCGameCellCompone
     @NotNull
     private JComponent getGameTabView() {
         JBTabs tabs = new JBTabsImpl(project);
+        List<FCGameCategory> categoryList = FCGameLoader.getInstance().getCategoryList();
         for (FCGameCategory category : categoryList) {
             TabInfo tabInfo = new TabInfo(buildContentPanel(category));
             tabInfo.setText(category.name);
@@ -137,7 +136,7 @@ public class FCGameListDialog extends DialogWrapper implements FCGameCellCompone
     @Override
     public void onClick(@NotNull FCGame game) {
         close(DialogWrapper.CLOSE_EXIT_CODE);
-        GameManager.getGameOnlineHtml(game, new GameManager.OnGameHtmlListener() {
+        GameManager.loadOnlineGame(project, game, new GameManager.OnGameHtmlListener() {
             @Override
             public void onReady(@NotNull String html) {
                 if (JBCefApp.isSupported()) {

@@ -1,8 +1,7 @@
-<idea-plugin>
+<idea-plugin require-restart="true">
     <id>com.xtu.plugins.game.center</id>
     <name>GameCenter</name>
     <vendor email="yanglang116@gmail.com">yanglang116@gmail.com</vendor>
-    <idea-version since-build="211"/>
     <depends>com.intellij.modules.platform</depends>
     <applicationListeners>
         <listener topic="com.intellij.ide.AppLifecycleListener"

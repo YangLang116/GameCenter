@@ -4,6 +4,8 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.io.FileUtil;
@@ -36,9 +38,11 @@ public class GameManager {
         });
     }
 
-    public static void getGameOfflineHtml(@NotNull GameManager.OnGameHtmlListener onGameHtmlReady) {
-        Application application = ApplicationManager.getApplication();
-        application.executeOnPooledThread(() -> {
+    public static void loadOfflineGame(@NotNull Project project,
+                                       @NotNull GameManager.OnGameHtmlListener onGameHtmlReady) {
+
+        loadGame(project, () -> {
+            Application application = ApplicationManager.getApplication();
             String template = StreamUtils.readTextFromResource("/game/fc/html/offline.html");
             assert template != null;
             String gameHtml = template
@@ -48,24 +52,37 @@ public class GameManager {
         });
     }
 
-    public static void getGameOnlineHtml(@NotNull FCGame game,
-                                         @NotNull GameManager.OnGameHtmlListener onGameHtmlReady) {
-        Application application = ApplicationManager.getApplication();
-        application.executeOnPooledThread(() -> {
-            String template = StreamUtils.readTextFromResource("/game/fc/html/online.html");
-            assert template != null;
+    public static void loadOnlineGame(@NotNull Project project,
+                                      @NotNull FCGame game,
+                                      @NotNull GameManager.OnGameHtmlListener onGameHtmlReady) {
+        loadGame(project, () -> {
+            Application application = ApplicationManager.getApplication();
             byte[] gameBytes = StreamUtils.readDataFromUrl(GameConst.PREFIX_RES + game.url);
             if (gameBytes == null) {
                 application.invokeLater(() -> onGameHtmlReady.onFail("load game fail"));
-                return;
+            } else {
+                String template = StreamUtils.readTextFromResource("/game/fc/html/online.html");
+                assert template != null;
+                String gameHtml = template
+                        .replace("{title}", game.name)
+                        .replace("{htmlCss}", getCssStyle())
+                        .replace("{libScript}", getScriptContent())
+                        .replace("{gameContent}", Base64.getEncoder().encodeToString(gameBytes));
+                application.invokeLater(() -> onGameHtmlReady.onReady(gameHtml));
             }
-            String gameHtml = template
-                    .replace("{title}", game.name)
-                    .replace("{htmlCss}", getCssStyle())
-                    .replace("{libScript}", getScriptContent())
-                    .replace("{gameContent}", Base64.getEncoder().encodeToString(gameBytes));
-            application.invokeLater(() -> onGameHtmlReady.onReady(gameHtml));
         });
+    }
+
+    private static void loadGame(@NotNull Project project, @NotNull Runnable task) {
+        new Task.Backgroundable(project, "Loading...") {
+            @Override
+            public void run(@NotNull ProgressIndicator indicator) {
+                indicator.setIndeterminate(true);
+                task.run();
+                indicator.setIndeterminate(false);
+                indicator.setFraction(1);
+            }
+        }.queue();
     }
 
     @NotNull

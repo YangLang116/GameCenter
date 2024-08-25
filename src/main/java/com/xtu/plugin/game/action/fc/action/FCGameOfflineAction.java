@@ -20,7 +20,7 @@ public final class FCGameOfflineAction extends AnAction {
     public void actionPerformed(@NotNull AnActionEvent e) {
         Project project = e.getProject();
         if (project == null) return;
-        GameManager.getGameOfflineHtml(new GameManager.OnGameHtmlListener() {
+        GameManager.loadOfflineGame(project, new GameManager.OnGameHtmlListener() {
             @Override
             public void onReady(@NotNull String html) {
                 if (JBCefApp.isSupported()) {
