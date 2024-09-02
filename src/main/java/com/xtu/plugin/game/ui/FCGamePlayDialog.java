@@ -24,7 +24,7 @@ public class FCGamePlayDialog extends DialogWrapper {
     private FCGamePlayDialog(@NotNull Project project,
                              @NotNull String gameName,
                              @NotNull String gameContent) {
-        super(project, null, false, IdeModalityType.PROJECT, false);
+        super(project, null, false, IdeModalityType.IDE, false);
         this.htmlContent = gameContent;
         setTitle(gameName);
         setSize(512, 480);

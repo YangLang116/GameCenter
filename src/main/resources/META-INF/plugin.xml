@@ -27,7 +27,7 @@
             <separator/>
             <action id="com.xtu.plugins.game.advice"
                     class="com.xtu.plugin.game.action.AdviceAction"
-                    text="Advice"/>
+                    text="Suggestion"/>
         </group>
     </actions>
 

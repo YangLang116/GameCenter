@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public final class AdviceAction extends AnAction {
 
     public AdviceAction() {
-        super("Advice");
+        super("Suggestion");
     }
 
     @Override

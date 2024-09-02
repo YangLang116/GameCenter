@@ -7,10 +7,8 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
+import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.ui.jcef.JBCefApp;
-import com.intellij.ui.tabs.JBTabs;
-import com.intellij.ui.tabs.TabInfo;
-import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.util.ui.JBUI;
 import com.xtu.plugin.game.constant.GameConst;
 import com.xtu.plugin.game.loader.fc.FCGameLoader;
@@ -41,7 +39,7 @@ public class FCGameListDialog extends DialogWrapper implements FCGameCellCompone
     }
 
     private FCGameListDialog(@NotNull Project project) {
-        super(project, null, false, IdeModalityType.PROJECT, false);
+        super(project, null, false, IdeModalityType.IDE, false);
         this.project = project;
         setTitle("Game List");
         setSize(180, 520);
@@ -72,14 +70,12 @@ public class FCGameListDialog extends DialogWrapper implements FCGameCellCompone
 
     @NotNull
     private JComponent getGameTabView() {
-        JBTabs tabs = new JBTabsImpl(project);
+        JTabbedPane tabbedPane = new JTabbedPane(JBTabbedPane.TOP, JBTabbedPane.SCROLL_TAB_LAYOUT);
         List<FCGameCategory> categoryList = FCGameLoader.getInstance().getCategoryList();
         for (FCGameCategory category : categoryList) {
-            TabInfo tabInfo = new TabInfo(buildContentPanel(category));
-            tabInfo.setText(category.name);
-            tabs.addTab(tabInfo);
+            tabbedPane.addTab(category.name, buildContentPanel(category));
         }
-        return tabs.getComponent();
+        return tabbedPane;
     }
 
     private @NotNull JComponent buildContentPanel(@NotNull FCGameCategory category) {
