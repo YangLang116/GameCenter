@@ -52,6 +52,7 @@ public class FCGameLoader {
     }
 
     public void loadGame(@NotNull FCGameCategory category) {
+        if (category.path == null) return;
         Application application = ApplicationManager.getApplication();
         String loadTitle = String.format("Loading %s Games", category.name);
         new Task.Backgroundable(null, loadTitle, false) {

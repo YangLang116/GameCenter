@@ -8,6 +8,7 @@
                   class="com.xtu.plugin.game.lifecycle.AppLifecycleListenerImpl"/>
     </applicationListeners>
     <extensions defaultExtensionNs="com.intellij">
+        <applicationService serviceImplementation="com.xtu.plugin.game.store.GameStorageService"/>
         <errorHandler implementation="com.xtu.plugin.game.reporter.GameErrorReporter"/>
     </extensions>
     <actions>

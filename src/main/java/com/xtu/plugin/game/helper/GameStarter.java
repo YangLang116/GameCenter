@@ -1,4 +1,4 @@
-package com.xtu.plugin.game.manager;
+package com.xtu.plugin.game.helper;
 
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.application.Application;
@@ -20,7 +20,7 @@ import java.io.File;
 import java.util.Base64;
 import java.util.Objects;
 
-public class GameManager {
+public class GameStarter {
 
     public static void openGameWithBrowser(@NotNull Project project,
                                            @NotNull String fileName,
@@ -39,7 +39,7 @@ public class GameManager {
     }
 
     public static void loadOfflineGame(@NotNull Project project,
-                                       @NotNull GameManager.OnGameHtmlListener onGameHtmlReady) {
+                                       @NotNull GameStarter.OnGameHtmlListener onGameHtmlReady) {
 
         loadGame(project, () -> {
             Application application = ApplicationManager.getApplication();
@@ -54,7 +54,7 @@ public class GameManager {
 
     public static void loadOnlineGame(@NotNull Project project,
                                       @NotNull FCGame game,
-                                      @NotNull GameManager.OnGameHtmlListener onGameHtmlReady) {
+                                      @NotNull GameStarter.OnGameHtmlListener onGameHtmlReady) {
         loadGame(project, () -> {
             Application application = ApplicationManager.getApplication();
             byte[] gameBytes = StreamUtils.readDataFromUrl(GameConst.PREFIX_RES + game.url);

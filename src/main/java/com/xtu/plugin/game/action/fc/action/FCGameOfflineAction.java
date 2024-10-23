@@ -5,7 +5,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.ui.jcef.JBCefApp;
-import com.xtu.plugin.game.manager.GameManager;
+import com.xtu.plugin.game.helper.GameStarter;
 import com.xtu.plugin.game.ui.FCGamePlayDialog;
 import com.xtu.plugin.game.utils.ToastUtil;
 import org.jetbrains.annotations.NotNull;
@@ -20,13 +20,13 @@ public final class FCGameOfflineAction extends AnAction {
     public void actionPerformed(@NotNull AnActionEvent e) {
         Project project = e.getProject();
         if (project == null) return;
-        GameManager.loadOfflineGame(project, new GameManager.OnGameHtmlListener() {
+        GameStarter.loadOfflineGame(project, new GameStarter.OnGameHtmlListener() {
             @Override
             public void onReady(@NotNull String html) {
                 if (JBCefApp.isSupported()) {
                     FCGamePlayDialog.play(project, "FC Game", html);
                 } else {
-                    GameManager.openGameWithBrowser(project, "offline.html", html);
+                    GameStarter.openGameWithBrowser(project, "offline.html", html);
                 }
             }
 

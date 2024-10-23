@@ -16,7 +16,13 @@ public class FCGameCategory {
         this.path = path;
     }
 
-    public void updateGames(List<FCGame> data) {
+    public FCGameCategory(@NotNull String name, @NotNull List<FCGame> games) {
+        this.name = name;
+        this.path = null;
+        this.games.addAll(games);
+    }
+
+    public void updateGames(@NotNull List<FCGame> data) {
         this.games.clear();
         this.games.addAll(data);
     }
