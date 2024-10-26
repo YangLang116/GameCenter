@@ -5,12 +5,12 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.SystemInfo;
+import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.IOException;
 
 public class AdviceUtils {
 
@@ -29,22 +29,25 @@ public class AdviceUtils {
 
         Application application = ApplicationManager.getApplication();
         application.executeOnPooledThread(() -> {
-            try {
-                sendData(jsonData.toString());
-                if (project != null) ToastUtil.make(project, MessageType.INFO, "thank you for submitting ~");
-            } catch (Exception e) {
-                if (project != null) ToastUtil.make(project, MessageType.ERROR, e.getMessage());
+            boolean ignore = sendData(jsonData.toString());
+            if (project != null) {
+                ToastUtil.make(project, MessageType.INFO, "thank you for submitting ~");
             }
         });
     }
 
-    private static void sendData(@NotNull String data) throws Exception {
-        URL url = new URL(sURL);
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        urlConnection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
-        urlConnection.setReadTimeout(5 * 1000);
-        urlConnection.setDoOutput(true);
-        StreamUtils.writeToStream(urlConnection.getOutputStream(), data);
-        urlConnection.getResponseCode();
+    private static boolean sendData(@NotNull String data) {
+        OkHttpClient client = new OkHttpClient();
+        MediaType JSON = MediaType.parse("application/json;charset=utf-8");
+        RequestBody requestBody = RequestBody.create(data, JSON);
+        Request request = new Request.Builder()
+                .url(sURL)
+                .post(requestBody)
+                .build();
+        try (Response response = client.newCall(request).execute()) {
+            return response.isSuccessful();
+        } catch (IOException e) {
+            return false;
+        }
     }
 }

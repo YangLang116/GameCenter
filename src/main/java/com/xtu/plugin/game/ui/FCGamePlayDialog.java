@@ -1,5 +1,8 @@
 package com.xtu.plugin.game.ui;
 
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Disposer;
@@ -17,8 +20,16 @@ public class FCGamePlayDialog extends DialogWrapper {
     public static void play(@NotNull Project project,
                             @NotNull String title,
                             @NotNull String htmlContent) {
-        FCGamePlayDialog dialog = new FCGamePlayDialog(project, title, htmlContent);
-        dialog.show();
+        Runnable showRunnable = () -> {
+            FCGamePlayDialog dialog = new FCGamePlayDialog(project, title, htmlContent);
+            dialog.show();
+        };
+        Application application = ApplicationManager.getApplication();
+        if (application.isDispatchThread()) {
+            showRunnable.run();
+        } else {
+            application.invokeLater(showRunnable, ModalityState.any());
+        }
     }
 
     private FCGamePlayDialog(@NotNull Project project,

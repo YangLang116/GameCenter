@@ -5,9 +5,9 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.ui.JBUI;
-import com.xtu.plugin.game.constant.GameConst;
 import com.xtu.plugin.game.loader.fc.FCGameLoader;
 import com.xtu.plugin.game.loader.fc.entity.FCGameCategory;
+import com.xtu.plugin.game.res.GameResManager;
 import com.xtu.plugin.game.ui.component.FCGameListComponent;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -49,7 +49,7 @@ public class FCGameCategoryDialog extends DialogWrapper {
 
     @NotNull
     private JComponent getGameTabView() {
-        JTabbedPane tabbedPane = new JTabbedPane(JBTabbedPane.TOP, JBTabbedPane.SCROLL_TAB_LAYOUT);
+        JTabbedPane tabbedPane = new JTabbedPane(JBTabbedPane.LEFT, JBTabbedPane.SCROLL_TAB_LAYOUT);
         List<FCGameCategory> categoryList = FCGameLoader.getInstance().getCategoryList();
         for (FCGameCategory category : categoryList) {
             tabbedPane.addTab(category.name, new FCGameListComponent(project, this, "Click To Reload", category));
@@ -59,7 +59,8 @@ public class FCGameCategoryDialog extends DialogWrapper {
 
     @NotNull
     private JLabel createTipLabel() {
-        JLabel tip = new JLabel(GameConst.TIP);
+        String gameNode = GameResManager.getInstance().getGameNote();
+        JLabel tip = new JLabel(gameNode);
         tip.setForeground(JBColor.foreground().darker());
         tip.setFont(new Font(null, Font.PLAIN, JBUI.scaleFontSize(12f)));
         tip.setBorder(JBUI.Borders.empty(10, 5));

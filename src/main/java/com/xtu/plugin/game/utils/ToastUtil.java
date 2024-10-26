@@ -31,7 +31,10 @@ public class ToastUtil {
     public static void make(@NotNull Project project, @NotNull MessageType type, @NotNull String text) {
         Runnable showRunnable = () -> {
             StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
-            make(statusBar.getComponent(), type, text);
+            if (statusBar == null) return;
+            JComponent component = statusBar.getComponent();
+            if (component == null) return;
+            make(component, type, text);
         };
         Application application = ApplicationManager.getApplication();
         if (application.isDispatchThread()) {

@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public class FCGameFavoriteAction extends AnAction {
 
     public FCGameFavoriteAction() {
-        super("Favorite");
+        super("Play Favorite");
     }
 
     @Override

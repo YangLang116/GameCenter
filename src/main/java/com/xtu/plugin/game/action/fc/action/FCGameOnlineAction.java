@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public final class FCGameOnlineAction extends AnAction {
 
     public FCGameOnlineAction() {
-        super("Online");
+        super("Play Online");
     }
 
     @Override
