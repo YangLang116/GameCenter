@@ -1,5 +1,7 @@
 package com.xtu.plugin.game.loader.fc;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -13,8 +15,6 @@ import com.xtu.plugin.game.utils.FileUtils;
 import org.apache.xerces.impl.dv.util.Base64;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +34,7 @@ public class FCGameLoader extends GameLoader {
 
     private final List<FCGameCategory> categoryList = new ArrayList<>();
 
+    private final Gson gson = new Gson();
     private final FileDownloader configDownloader = new FileDownloader();
 
     @Override
@@ -79,17 +80,8 @@ public class FCGameLoader extends GameLoader {
     private List<FCGame> parseGameList(@NotNull String base64Str) {
         try {
             String jsonStr = new String(Base64.decode(base64Str));
-            JSONArray gameJsonArray = new JSONArray(jsonStr);
-            List<FCGame> gameList = new ArrayList<>();
-            for (int i = 0; i < gameJsonArray.length(); i++) {
-                JSONObject gameObj = (JSONObject) gameJsonArray.get(i);
-                String name = gameObj.optString("name");
-                String desc = gameObj.optString("desc");
-                String icon = gameObj.optString("icon");
-                String url = gameObj.optString("url");
-                gameList.add(new FCGame(name, desc, icon, url));
-            }
-            return gameList;
+            return gson.fromJson(jsonStr, new TypeToken<>() {
+            });
         } catch (Exception e) {
             return null;
         }

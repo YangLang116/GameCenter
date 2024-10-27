@@ -16,7 +16,7 @@ repositories {
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-    implementation("org.json:json:20240303")
+    implementation("com.google.code.gson:gson:2.11.0")
     implementation("net.coobird:thumbnailator:0.4.20")
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     intellijPlatform {
@@ -63,10 +63,10 @@ intellijPlatform {
         changeNotes = providers.gradleProperty("pluginVersion").map { pluginVersion ->
             with(changelog) {
                 renderItem(
-                    (getOrNull(pluginVersion) ?: getUnreleased())
-                        .withHeader(false)
-                        .withEmptySections(false),
-                    Changelog.OutputType.HTML,
+                        (getOrNull(pluginVersion) ?: getUnreleased())
+                                .withHeader(false)
+                                .withEmptySections(false),
+                        Changelog.OutputType.HTML,
                 )
             }
         }
@@ -79,7 +79,7 @@ intellijPlatform {
     publishing {
         token = providers.environmentVariable("PUBLISH_TOKEN")
         channels = providers.gradleProperty("pluginVersion")
-            .map { listOf(it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" }) }
+                .map { listOf(it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" }) }
     }
     pluginVerification {
         ides {

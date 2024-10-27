@@ -1,5 +1,7 @@
 package com.xtu.plugin.game.reporter;
 
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.SystemInfo;
@@ -9,16 +11,17 @@ import com.xtu.plugin.game.utils.VersionUtils;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 public class GameReporter {
 
+    private final Gson gson;
     private final OkHttpClient client;
 
     private GameReporter() {
+        this.gson = new Gson();
         this.client = new OkHttpClient.Builder()
                 .connectTimeout(3, TimeUnit.SECONDS)
                 .readTimeout(3, TimeUnit.SECONDS)
@@ -33,15 +36,9 @@ public class GameReporter {
     }
 
     public void submitAdvice(@Nullable Project project, @NotNull String title, @NotNull String content) {
-        JSONObject jsonData = new JSONObject();
-        jsonData.put("title", title);
-        jsonData.put("content", content);
-        jsonData.put("app_key", "GameCenter");
-        jsonData.put("os", SystemInfo.getOsNameAndVersion());
-        jsonData.put("version", VersionUtils.getPluginVersion());
-
+        ReportData data = new ReportData(title, content);
         String url = GameResManager.getInstance().getAdviceUrl();
-        submitJsonData(url, jsonData, new CallbackAdapter() {
+        submitJsonData(url, data, new CallbackAdapter() {
             @Override
             void onFinish() {
                 if (project != null) {
@@ -52,9 +49,10 @@ public class GameReporter {
     }
 
     @SuppressWarnings("SameParameterValue")
-    private void submitJsonData(@NotNull String url, @NotNull JSONObject jsonData, @NotNull Callback callback) {
+    private void submitJsonData(@NotNull String url, @NotNull ReportData data, @NotNull Callback callback) {
         MediaType JSON = MediaType.parse("application/json;charset=utf-8");
-        RequestBody requestBody = RequestBody.create(jsonData.toString(), JSON);
+        String jsonStr = gson.toJson(data);
+        RequestBody requestBody = RequestBody.create(jsonStr, JSON);
         Request request = new Request.Builder()
                 .url(url)
                 .post(requestBody)
@@ -75,5 +73,31 @@ public class GameReporter {
         }
 
         abstract void onFinish();
+    }
+
+    static class ReportData {
+
+        private final String title;
+        private final String content;
+        @SerializedName("app_key")
+        private final String appKey = "GameCenter";
+        private final String os = SystemInfo.getOsNameAndVersion();
+        private final String version = VersionUtils.getPluginVersion();
+
+        private ReportData(@NotNull String title, @NotNull String content) {
+            this.title = title;
+            this.content = content;
+        }
+
+        @Override
+        public String toString() {
+            return "ReportData{" +
+                    "title='" + title + '\'' +
+                    ", content='" + content + '\'' +
+                    ", app_key='" + appKey + '\'' +
+                    ", os='" + os + '\'' +
+                    ", version='" + version + '\'' +
+                    '}';
+        }
     }
 }
