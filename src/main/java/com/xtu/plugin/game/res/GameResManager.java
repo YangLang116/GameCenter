@@ -2,6 +2,7 @@ package com.xtu.plugin.game.res;
 
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("HttpUrlsUsage")
 public class GameResManager {
 
     private GameResManager() {
@@ -25,11 +26,11 @@ public class GameResManager {
 
     @NotNull
     public String getConfigUrl(@NotNull String name) {
-        return "https://gitee.com/YangLang116/nes-game-list/raw/config/category/" + name;
+        return "http://iflutter.toolu.cn/nes-game-list/category/" + name;
     }
 
     @NotNull
     public String getResUrl(@NotNull String name) {
-        return "https://gitee.com/YangLang116/nes-game-list/raw/config/nes_list/" + name;
+        return "http://iflutter.toolu.cn/nes-game-list/nes_list/" + name;
     }
 }
