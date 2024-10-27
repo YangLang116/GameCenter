@@ -51,6 +51,7 @@ public class FCGameCategoryDialog extends DialogWrapper {
     private JComponent getGameTabView() {
         List<FCGameCategory> categoryList = FCGameLoader.getInstance().getCategoryList();
         JTabbedPane tabbedPane = new JTabbedPane(JBTabbedPane.LEFT, JBTabbedPane.SCROLL_TAB_LAYOUT);
+        tabbedPane.setFont(new Font(null, Font.BOLD, 15));
         for (FCGameCategory category : categoryList) {
             JComponent content = new FCGameListComponent(project, this, "Click To Reload", category);
             tabbedPane.addTab(category.name, content);

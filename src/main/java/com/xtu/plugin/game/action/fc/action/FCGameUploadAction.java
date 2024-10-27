@@ -10,7 +10,7 @@ public final class FCGameUploadAction extends AnAction {
 
 
     public FCGameUploadAction() {
-        super("To Upload");
+        super("Upload Game");
     }
 
     @Override
