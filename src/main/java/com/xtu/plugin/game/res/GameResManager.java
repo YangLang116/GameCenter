@@ -33,4 +33,9 @@ public class GameResManager {
     public String getResUrl(@NotNull String name) {
         return "http://iflutter.toolu.cn/nes-game-list/nes_list/" + name;
     }
+
+    @NotNull
+    public String getAdviceUrl() {
+        return "http://iflutter.toolu.cn/api/advice";
+    }
 }

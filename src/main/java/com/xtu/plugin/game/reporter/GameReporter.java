@@ -3,6 +3,7 @@ package com.xtu.plugin.game.reporter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.SystemInfo;
+import com.xtu.plugin.game.res.GameResManager;
 import com.xtu.plugin.game.utils.ToastUtil;
 import com.xtu.plugin.game.utils.VersionUtils;
 import okhttp3.*;
@@ -38,8 +39,9 @@ public class GameReporter {
         jsonData.put("app_key", "GameCenter");
         jsonData.put("os", SystemInfo.getOsNameAndVersion());
         jsonData.put("version", VersionUtils.getPluginVersion());
-        //noinspection HttpUrlsUsage
-        submitJsonData("http://iflutter.toolu.cn/api/advice", jsonData, new CallbackAdapter() {
+
+        String url = GameResManager.getInstance().getAdviceUrl();
+        submitJsonData(url, jsonData, new CallbackAdapter() {
             @Override
             void onFinish() {
                 if (project != null) {
