@@ -69,7 +69,7 @@ public class FileDownloader {
     private Path getTargetPath(@NotNull String url) {
         int index = url.lastIndexOf("/");
         String fileName = url.substring(index + 1);
-        String savePath = PathManager.getPluginTempPath() + "/" + fileName;
+        String savePath = PathManager.getPluginTempPath() + "/GameCenter/" + fileName;
         return Paths.get(savePath);
     }
 
