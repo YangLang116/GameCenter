@@ -128,7 +128,7 @@ public class GameStarter {
     }
 
     private void loadGame(@NotNull Project project, @NotNull Runnable task) {
-        new Task.Backgroundable(project, "Loading...") {
+        new Task.Backgroundable(project, "Loading Game ...") {
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
                 indicator.setIndeterminate(true);
