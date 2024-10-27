@@ -1,6 +1,7 @@
 package com.xtu.plugin.game.utils;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.xtu.plugin.game.reporter.GameReporter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.PrintWriter;
@@ -15,7 +16,8 @@ public class LogUtils {
         System.out.println(entryPoint + " : " + exception.getMessage());
         String content = "message: \n" + exception.getMessage() + "\n" +
                 "stackTrace: \n" + getStackTrace(exception);
-        AdviceUtils.submitData(null, "error catch", content);
+        LOG.error(content);
+        GameReporter.getInstance().submitAdvice(null, "error catch", content);
     }
 
     private static String getStackTrace(@NotNull Exception e) {

@@ -1,9 +1,12 @@
 package com.xtu.plugin.game.ui;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.JBUI;
 import com.xtu.plugin.game.downloader.FileDownloader;
 import com.xtu.plugin.game.loader.fc.entity.FCGame;
+import com.xtu.plugin.game.reporter.GameReporter;
+import com.xtu.plugin.game.store.GameStorageService;
 import com.xtu.plugin.game.ui.callback.OnGameSelectListener;
 import com.xtu.plugin.game.ui.component.FCGameCoverComponent;
 import icons.PluginIcons;
@@ -11,41 +14,38 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class FCGameCellComponent extends JPanel {
 
     private boolean isFavorite;
 
-    public FCGameCellComponent(@NotNull FileDownloader coverDownloader,
+    public FCGameCellComponent(@NotNull Project project,
+                               @NotNull FileDownloader coverDownloader,
                                @NotNull FCGame game,
                                @NotNull OnGameSelectListener clickListener) {
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(-1, 160));
-        add(createGameBox(coverDownloader, game), BorderLayout.CENTER);
+        add(createGameBox(project, game, coverDownloader, clickListener), BorderLayout.CENTER);
         add(new JSeparator(JSeparator.HORIZONTAL), BorderLayout.SOUTH);
     }
 
-    private JComponent createGameBox(@NotNull FileDownloader coverDownloader,
-                                     @NotNull FCGame game) {
+    private JComponent createGameBox(@NotNull Project project,
+                                     @NotNull FCGame game,
+                                     @NotNull FileDownloader coverDownloader,
+                                     @NotNull OnGameSelectListener clickListener) {
         JPanel rootContainer = new JPanel(new BorderLayout());
-        rootContainer.setBorder(JBUI.Borders.empty(10, 5));
+        rootContainer.setBorder(JBUI.Borders.empty(10, 0));
 
-        JComponent coverComponent = new FCGameCoverComponent(160, 160, game.icon, coverDownloader);
-//        coverComponent.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-//        coverComponent.setBorder(JBUI.Borders.emptyBottom(20));
+        JComponent coverComponent = new FCGameCoverComponent(140, 140, game.icon, coverDownloader);
         rootContainer.add(coverComponent, BorderLayout.WEST);
 
         JPanel infoContainer = new JPanel(new BorderLayout());
-        infoContainer.setBorder(JBUI.Borders.emptyLeft(10));
-//        infoContainer.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-//        infoContainer.setAlignmentY(JComponent.CENTER_ALIGNMENT);
+        infoContainer.setBorder(JBUI.Borders.empty(5, 10, 5, 0));
         rootContainer.add(infoContainer, BorderLayout.CENTER);
 
         JLabel nameLabel = new JLabel(String.format("<html><u>%s</u></html>", game.name));
-//        nameLabel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-        nameLabel.setFont(new Font(null, Font.BOLD, JBUI.scaleFontSize(18f)));
+        nameLabel.setToolTipText(game.name);
+        nameLabel.setFont(new Font(null, Font.BOLD, 18));
         nameLabel.setForeground(JBColor.foreground());
         infoContainer.add(nameLabel, BorderLayout.NORTH);
 
@@ -53,11 +53,11 @@ public class FCGameCellComponent extends JPanel {
         descLabel.setEditable(false);
         descLabel.setLineWrap(true);
         descLabel.setWrapStyleWord(true);
-        descLabel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-        descLabel.setBorder(JBUI.Borders.empty(10, 0));
+        descLabel.setToolTipText(game.desc);
+        descLabel.setFont(new Font(null, Font.PLAIN, 13));
         descLabel.setForeground(JBColor.foreground().darker());
         descLabel.setBackground(new Color(0, 0, 0, 0));
-        descLabel.setFont(new Font(null, Font.PLAIN, JBUI.scaleFontSize(13f)));
+        descLabel.setBorder(JBUI.Borders.empty(10, 0));
         infoContainer.add(descLabel, BorderLayout.CENTER);
 
         Box buttonContainer = Box.createHorizontalBox();
@@ -65,56 +65,30 @@ public class FCGameCellComponent extends JPanel {
         infoContainer.add(buttonContainer, BorderLayout.SOUTH);
 
         JButton starBtn = new JButton("Star");
-        starBtn.setIcon(PluginIcons.STAR);
+        GameStorageService storageService = GameStorageService.getService();
+        this.isFavorite = storageService.isFavorite(game);
+        starBtn.setIcon(this.isFavorite ? PluginIcons.STAR : PluginIcons.STAR_EMPTY);
+        starBtn.addActionListener(e -> {
+            if (this.isFavorite) {
+                storageService.removeFavoriteGame(game);
+                starBtn.setIcon(PluginIcons.STAR_EMPTY);
+                this.isFavorite = false;
+            } else {
+                storageService.addFavoriteGame(game);
+                starBtn.setIcon(PluginIcons.STAR);
+                this.isFavorite = true;
+            }
+        });
         buttonContainer.add(starBtn);
-
         buttonContainer.add(Box.createHorizontalStrut(10));
-
-        JButton playBtn = new JButton("Play");
-        playBtn.setIcon(PluginIcons.PLAY);
+        JButton playBtn = new JButton("Play", PluginIcons.PLAY);
+        playBtn.addActionListener(e -> clickListener.onSelect(game));
         buttonContainer.add(playBtn);
+        buttonContainer.add(Box.createHorizontalStrut(10));
+        JButton runErrorBtn = new JButton("Run Error", PluginIcons.RUN_ERROR);
+        runErrorBtn.addActionListener(e -> GameReporter.getInstance().submitAdvice(project, "Game Run Error", game.name));
+        buttonContainer.add(runErrorBtn);
 
         return rootContainer;
     }
-
-    @NotNull
-    private MouseAdapter getMouseAdapter(@NotNull FCGame game, @NotNull OnGameSelectListener clickListener) {
-        return new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                clickListener.onSelect(game);
-            }
-        };
-    }
-
-//    private void addHeadComponent(@NotNull FCGame game) {
-//        Box container = Box.createHorizontalBox();
-//        container.setBorder(JBUI.Borders.empty(10, 0));
-//        container.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-//        container.add(createFavoriteIcon(game));
-//        container.add(Box.createHorizontalStrut(5));
-//        container.add(createNameLabel(game.name));
-//        add(container);
-//    }
-
-//    private JComponent createFavoriteIcon(@NotNull FCGame game) {
-//        this.isFavorite = GameStorageService.getService().isFavorite(game);
-//        JLabel favoriteIcon = new JLabel();
-//        favoriteIcon.setAlignmentY(JComponent.CENTER_ALIGNMENT);
-//        favoriteIcon.setSize(new Dimension(16, 16));
-//        favoriteIcon.setIcon(isFavorite ? PluginIcons.star : PluginIcons.starEmpty);
-//        favoriteIcon.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                isFavorite = !isFavorite;
-//                favoriteIcon.setIcon(isFavorite ? PluginIcons.star : PluginIcons.starEmpty);
-//                if (isFavorite) {
-//                    GameStorageService.getService().addFavoriteGame(game);
-//                } else {
-//                    GameStorageService.getService().removeFavoriteGame(game);
-//                }
-//            }
-//        });
-//        return favoriteIcon;
-//    }
 }

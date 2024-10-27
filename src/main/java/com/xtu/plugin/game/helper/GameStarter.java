@@ -106,7 +106,7 @@ public class GameStarter {
                                 @NotNull GameStarter.OnGameHtmlListener onGameHtmlReady) {
         loadGame(project, () -> {
             String nesUrl = GameResManager.getInstance().getResUrl(game.url);
-            String downloadPath = gameDownloader.downloadFile(nesUrl);
+            String downloadPath = gameDownloader.downloadFileWithCacheFirst(nesUrl);
             if (downloadPath == null) {
                 onGameHtmlReady.onFail("download game fail");
                 return;

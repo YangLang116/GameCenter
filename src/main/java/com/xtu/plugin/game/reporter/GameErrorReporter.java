@@ -9,7 +9,6 @@ import com.intellij.openapi.diagnostic.SubmittedReportInfo;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.NlsActions;
 import com.intellij.util.Consumer;
-import com.xtu.plugin.game.utils.AdviceUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,7 +56,7 @@ public class GameErrorReporter extends ErrorReportSubmitter {
             contentSb.append("additionalInfo:\n").append(additionalInfo).append("\n\n");
         }
         contentSb.append("errorStack:\n").append(errorInfo);
-        AdviceUtils.submitData(project, "report issue", contentSb.toString());
+        GameReporter.getInstance().submitAdvice(project, "report issue", contentSb.toString());
         return SubmittedReportInfo.SubmissionStatus.NEW_ISSUE;
     }
 }

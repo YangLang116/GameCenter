@@ -9,7 +9,7 @@ import com.xtu.plugin.game.loader.fc.entity.FCGameCategory;
 import com.xtu.plugin.game.store.entity.GameStoreEntity;
 import org.jetbrains.annotations.NotNull;
 
-@State(name = "GameCenter", storages = {@Storage("idea.GameCenter.xml")})
+@State(name = "GameCenter", storages = {@Storage("GameCenter.xml")})
 public class GameStorageService implements PersistentStateComponent<GameStoreEntity> {
 
     public static GameStorageService getService() {

@@ -29,7 +29,6 @@ import java.util.List;
 public class FCGameListComponent extends JPanel {
 
     private final FileDownloader coverDownloader = new FileDownloader();
-    private final FileDownloader nesDownloader = new FileDownloader();
 
     public FCGameListComponent(@NotNull Project project,
                                @NotNull DialogWrapper owner,
@@ -47,14 +46,14 @@ public class FCGameListComponent extends JPanel {
                 owner.close(DialogWrapper.CLOSE_EXIT_CODE);
                 GameStarter.getInstance().playOnlineFCGame(project, game);
             };
-            addListComponent(category.games, itemClickListener);
+            addListComponent(project, category.games, itemClickListener);
         }
     }
 
     private void addEmptyComponent(@NotNull String tip, @NotNull OnRefreshListener onRefreshListener) {
         JLabel emptyTip = new JLabel(tip);
         emptyTip.setForeground(JBColor.foreground());
-        emptyTip.setFont(new Font(null, Font.BOLD, JBUI.scaleFontSize(18f)));
+        emptyTip.setFont(new Font(null, Font.BOLD, 18));
         emptyTip.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -71,13 +70,14 @@ public class FCGameListComponent extends JPanel {
         add(emptyPanel, BorderLayout.CENTER);
     }
 
-    private void addListComponent(@NotNull List<FCGame> games,
+    private void addListComponent(@NotNull Project project,
+                                  @NotNull List<FCGame> games,
                                   @NotNull OnGameSelectListener clickListener) {
         final Box listView = Box.createVerticalBox();
         listView.setBorder(JBUI.Borders.empty(0, 5));
         for (int index = games.size() - 1; index >= 0; index--) {
             FCGame fcGame = games.get(index);
-            listView.add(new FCGameCellComponent(coverDownloader, fcGame, clickListener), 0);
+            listView.add(new FCGameCellComponent(project, coverDownloader, fcGame, clickListener), 0);
         }
         int MaskCode = SystemInfo.isMac ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK;
         listView.registerKeyboardAction(e -> doSearch(listView, games), KeyStroke.getKeyStroke(KeyEvent.VK_F, MaskCode), JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -100,10 +100,5 @@ public class FCGameListComponent extends JPanel {
         Component component = listView.getComponent(selectIndex);
         Rectangle bounds = component.getBounds();
         listView.scrollRectToVisible(bounds);
-    }
-
-    public void dispose() {
-        coverDownloader.dispose();
-        nesDownloader.dispose();
     }
 }

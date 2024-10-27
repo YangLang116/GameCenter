@@ -4,7 +4,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.util.ui.JBUI;
-import com.xtu.plugin.game.utils.AdviceUtils;
+import com.xtu.plugin.game.reporter.GameReporter;
 import com.xtu.plugin.game.utils.StringUtils;
 import com.xtu.plugin.game.utils.ToastUtil;
 import org.jetbrains.annotations.NonNls;
@@ -31,7 +31,7 @@ public class AdviceDialog extends DialogWrapper {
             ToastUtil.make(project, MessageType.ERROR, "Title or Content is Empty ~");
             return;
         }
-        AdviceUtils.submitData(project, title, content);
+        GameReporter.getInstance().submitAdvice(project, title, content);
     }
 
     private AdviceDialog(@NotNull Project project) {

@@ -24,7 +24,7 @@ public class FCGameFavoriteDialog extends DialogWrapper {
         super(project, null, false, IdeModalityType.IDE, false);
         this.project = project;
         setTitle("Favorite Game");
-        setSize(360, 150);
+        setSize(640, 180);
         init();
     }
 

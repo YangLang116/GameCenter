@@ -68,7 +68,7 @@ public class FCGameLoader extends GameLoader {
     @Nullable
     private List<FCGame> requestGame(@NotNull String name) {
         String configUrl = GameResManager.getInstance().getConfigUrl(name);
-        String cachePath = configDownloader.downloadFile(configUrl);
+        String cachePath = configDownloader.downloadFileWithNetworkFirst(configUrl);
         if (cachePath == null) return null;
         String data = FileUtils.readAsString(cachePath);
         if (data == null) return null;

@@ -2,7 +2,6 @@ package com.xtu.plugin.game.loader.fc.entity;
 
 import java.util.Objects;
 
-@SuppressWarnings("ClassCanBeRecord")
 public final class FCGame {
 
     public final String name;

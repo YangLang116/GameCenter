@@ -1,6 +1,8 @@
 package com.xtu.plugin.game.store.entity;
 
+import com.intellij.util.xmlb.annotations.OptionTag;
 import com.xtu.plugin.game.loader.fc.entity.FCGame;
+import com.xtu.plugin.game.store.converter.FCGameConvert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +10,7 @@ import java.util.Objects;
 
 public class GameStoreEntity {
 
+    @OptionTag(converter = FCGameConvert.class)
     public List<FCGame> favoriteGame = new ArrayList<>();
 
     public GameStoreEntity() {

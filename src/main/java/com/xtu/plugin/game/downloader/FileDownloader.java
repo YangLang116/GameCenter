@@ -18,37 +18,79 @@ import java.nio.file.StandardCopyOption;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class FileDownloader {
 
-    private final OkHttpClient client = new OkHttpClient();
+    private final OkHttpClient client;
 
-    private final ExecutorService executor = Executors.newFixedThreadPool(10);
+    private final ExecutorService executor;
 
-    public CompletableFuture<String> downloadFileAsync(@NotNull String url) {
-        return CompletableFuture.supplyAsync(() -> downloadFile(url), executor);
+    public FileDownloader() {
+        this.client = new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS)
+                .build();
+        this.executor = Executors.newFixedThreadPool(10);
     }
 
-    private String getFileName(@NotNull String url) {
-        int index = url.lastIndexOf("/");
-        return url.substring(index + 1);
+    public CompletableFuture<String> downloadFileAsync(@NotNull String url, boolean cacheFirst) {
+        return CompletableFuture.supplyAsync(() -> {
+            if (cacheFirst) {
+                return downloadFileWithCacheFirst(url);
+            } else {
+                return downloadFileWithNetworkFirst(url);
+            }
+        }, executor);
     }
 
     @Nullable
-    public String downloadFile(@NotNull String url) {
-        String fileName = getFileName(url);
+    public String downloadFileWithNetworkFirst(@NotNull String url) {
+        Path targetPath = getTargetPath(url);
+        String downloadPath = loadFromNetwork(url, targetPath);
+        if (downloadPath != null) {
+            return downloadPath;
+        }
+        return loadFromDisk(targetPath);
+    }
+
+    @Nullable
+    public String downloadFileWithCacheFirst(@NotNull String url) {
+        Path targetPath = getTargetPath(url);
+        String cachePath = loadFromDisk(targetPath);
+        if (cachePath != null) {
+            return cachePath;
+        }
+        return loadFromNetwork(url, targetPath);
+    }
+
+    @NotNull
+    private Path getTargetPath(@NotNull String url) {
+        int index = url.lastIndexOf("/");
+        String fileName = url.substring(index + 1);
         String savePath = PathManager.getPluginTempPath() + "/" + fileName;
-        Path targetPath = Paths.get(savePath);
+        return Paths.get(savePath);
+    }
+
+    @Nullable
+    private String loadFromDisk(@NotNull Path targetPath) {
         if (Files.exists(targetPath)) {
             return targetPath.toString();
+        } else {
+            return null;
         }
+    }
+
+    @Nullable
+    private String loadFromNetwork(@NotNull String url, @NotNull Path savePath) {
         Request request = new Request.Builder().url(url).build();
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) return null;
             ResponseBody body = response.body();
             if (body == null) return null;
             InputStream inputStream = body.byteStream();
-            return writeFile(inputStream, targetPath);
+            return writeFile(inputStream, savePath);
         } catch (Exception e) {
             return null;
         }
@@ -72,12 +114,6 @@ public class FileDownloader {
             CloseUtils.close(inputStream);
             CloseUtils.close(outputStream);
             return null;
-        }
-    }
-
-    public void dispose() {
-        if (!executor.isShutdown()) {
-            executor.shutdown();
         }
     }
 }

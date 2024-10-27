@@ -28,7 +28,7 @@ public class FCGameCoverComponent extends JLabel {
 
     private CompletableFuture<String> downloadThumbnail(@NotNull FileDownloader downloader, @NotNull String name) {
         String url = GameResManager.getInstance().getResUrl(name);
-        return downloader.downloadFileAsync(url);
+        return downloader.downloadFileAsync(url, true);
     }
 
     private void loadThumbnail(@NotNull String path, int width, int height) {
