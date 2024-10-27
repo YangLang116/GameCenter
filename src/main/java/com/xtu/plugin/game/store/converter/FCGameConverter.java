@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class FCGameConvert extends Converter<List<FCGame>> {
+public class FCGameConverter extends Converter<List<FCGame>> {
 
     private final Gson gson = new Gson();
 
