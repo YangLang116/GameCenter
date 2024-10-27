@@ -84,7 +84,10 @@ public class FileDownloader {
 
     @Nullable
     private String loadFromNetwork(@NotNull String url, @NotNull Path savePath) {
-        Request request = new Request.Builder().url(url).build();
+        Request request = new Request.Builder()
+                .url(url)
+                .header("User-Agent", "Mozilla/5.0")
+                .build();
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) return null;
             ResponseBody body = response.body();
