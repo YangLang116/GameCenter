@@ -9,6 +9,8 @@
     </applicationListeners>
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="com.xtu.plugin.game.store.GameStorageService"/>
+        <applicationConfigurable parentId="tools"
+                                 instance="com.xtu.plugin.game.configuration.SettingsConfiguration"/>
         <errorHandler implementation="com.xtu.plugin.game.reporter.GameErrorReporter"/>
     </extensions>
     <actions>

@@ -35,7 +35,7 @@ public class FCGameFavoriteDialog extends DialogWrapper {
 
     @Override
     protected @Nullable JComponent createCenterPanel() {
-        FCGameCategory category = GameStorageService.getService().getFavoriteCategory();
+        FCGameCategory category = GameStorageService.getFavoriteCategory();
         return new FCGameListComponent(project, this, "No favorites", category);
     }
 }

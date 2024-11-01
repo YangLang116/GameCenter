@@ -1,5 +1,6 @@
 package com.xtu.plugin.game.res;
 
+import com.xtu.plugin.game.store.GameStorageService;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("HttpUrlsUsage")
@@ -26,12 +27,12 @@ public class GameResManager {
 
     @NotNull
     public String getConfigUrl(@NotNull String name) {
-        return "http://iflutter.toolu.cn/nes-game-list/category/" + name;
+        return GameStorageService.getGameRepo() + "/category/" + name;
     }
 
     @NotNull
     public String getResUrl(@NotNull String name) {
-        return "http://iflutter.toolu.cn/nes-game-list/nes_list/" + name;
+        return GameStorageService.getGameRepo() + "/nes_list/" + name;
     }
 
     @NotNull

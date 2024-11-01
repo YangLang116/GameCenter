@@ -12,8 +12,8 @@ import org.jetbrains.annotations.NotNull;
 @State(name = "GameCenter", storages = {@Storage("GameCenter.xml")})
 public class GameStorageService implements PersistentStateComponent<GameStoreEntity> {
 
-    public static GameStorageService getService() {
-        return ApplicationManager.getApplication().getService(GameStorageService.class);
+    private static GameStoreEntity getStore() {
+        return ApplicationManager.getApplication().getService(GameStorageService.class).storageEntity;
     }
 
     private GameStoreEntity storageEntity = new GameStoreEntity();
@@ -29,19 +29,29 @@ public class GameStorageService implements PersistentStateComponent<GameStoreEnt
         this.storageEntity = state;
     }
 
-    public FCGameCategory getFavoriteCategory() {
-        return new FCGameCategory("Favorite", storageEntity.favoriteGame);
+    @NotNull
+    public static FCGameCategory getFavoriteCategory() {
+        return new FCGameCategory("Favorite", getStore().favoriteGame);
     }
 
-    public boolean isFavorite(@NotNull FCGame game) {
-        return storageEntity.favoriteGame.contains(game);
+    public static boolean isFavorite(@NotNull FCGame game) {
+        return getStore().favoriteGame.contains(game);
     }
 
-    public void addFavoriteGame(@NotNull FCGame game) {
-        storageEntity.favoriteGame.add(game);
+    public static void addFavoriteGame(@NotNull FCGame game) {
+        getStore().favoriteGame.add(game);
     }
 
-    public void removeFavoriteGame(@NotNull FCGame game) {
-        storageEntity.favoriteGame.remove(game);
+    public static void removeFavoriteGame(@NotNull FCGame game) {
+        getStore().favoriteGame.remove(game);
+    }
+
+    @NotNull
+    public static String getGameRepo() {
+        return getStore().gameRepo;
+    }
+
+    public static void setGameRepo(@NotNull String repo) {
+        getStore().gameRepo = repo;
     }
 }

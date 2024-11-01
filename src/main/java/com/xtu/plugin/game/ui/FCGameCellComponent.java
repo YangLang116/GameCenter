@@ -65,16 +65,15 @@ public class FCGameCellComponent extends JPanel {
         infoContainer.add(buttonContainer, BorderLayout.SOUTH);
 
         JButton starBtn = new JButton("Star");
-        GameStorageService storageService = GameStorageService.getService();
-        this.isFavorite = storageService.isFavorite(game);
+        this.isFavorite = GameStorageService.isFavorite(game);
         starBtn.setIcon(this.isFavorite ? PluginIcons.STAR : PluginIcons.STAR_EMPTY);
         starBtn.addActionListener(e -> {
             if (this.isFavorite) {
-                storageService.removeFavoriteGame(game);
+                GameStorageService.removeFavoriteGame(game);
                 starBtn.setIcon(PluginIcons.STAR_EMPTY);
                 this.isFavorite = false;
             } else {
-                storageService.addFavoriteGame(game);
+                GameStorageService.addFavoriteGame(game);
                 starBtn.setIcon(PluginIcons.STAR);
                 this.isFavorite = true;
             }
