@@ -4,8 +4,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.xtu.plugin.game.loader.fc.entity.FCGameCategory;
 import com.xtu.plugin.game.store.GameStorageService;
+import com.xtu.plugin.game.ui.component.FCGameEmptyComponent;
 import com.xtu.plugin.game.ui.component.FCGameListComponent;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,29 +13,29 @@ import javax.swing.*;
 
 public class FCGameFavoriteDialog extends DialogWrapper {
 
-    private final Project project;
-
     public static void show(@NotNull Project project) {
         FCGameFavoriteDialog dialog = new FCGameFavoriteDialog(project);
         dialog.show();
     }
 
-    private FCGameFavoriteDialog(@NotNull Project project) {
-        super(project, null, false, IdeModalityType.IDE, false);
-        this.project = project;
-        setTitle("Favorite Game");
-        setSize(640, 180);
-        init();
-    }
+    private final Project project;
 
-    @Override
-    protected @Nullable @NonNls String getDimensionServiceKey() {
-        return FCGameFavoriteDialog.class.getSimpleName();
+    private FCGameFavoriteDialog(@NotNull Project project) {
+        super(project, null, true, IdeModalityType.IDE, false);
+        this.project = project;
+        setTitle("");
+        setSize(480, 320);
+        setResizable(false);
+        init();
     }
 
     @Override
     protected @Nullable JComponent createCenterPanel() {
         FCGameCategory category = GameStorageService.getFavoriteCategory();
-        return new FCGameListComponent(project, this, "No favorites", category);
+        if (category.noGames()) {
+            return new FCGameEmptyComponent("No favorites");
+        } else {
+            return new FCGameListComponent(project, category.games);
+        }
     }
 }

@@ -8,8 +8,8 @@ import com.intellij.util.ui.JBUI;
 import com.xtu.plugin.game.loader.fc.FCGameLoader;
 import com.xtu.plugin.game.loader.fc.entity.FCGameCategory;
 import com.xtu.plugin.game.res.GameResManager;
+import com.xtu.plugin.game.ui.component.FCGameEmptyComponent;
 import com.xtu.plugin.game.ui.component.FCGameListComponent;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,24 +19,20 @@ import java.util.List;
 
 public class FCGameCategoryDialog extends DialogWrapper {
 
-    private final Project project;
-
     public static void show(@NotNull Project project) {
         FCGameCategoryDialog dialog = new FCGameCategoryDialog(project);
         dialog.show();
     }
 
-    private FCGameCategoryDialog(@NotNull Project project) {
-        super(project, null, false, IdeModalityType.IDE, false);
-        this.project = project;
-        setTitle("Game Category");
-        setSize(640, 520);
-        init();
-    }
+    private final Project project;
 
-    @Override
-    protected @Nullable @NonNls String getDimensionServiceKey() {
-        return FCGameCategoryDialog.class.getSimpleName();
+    private FCGameCategoryDialog(@NotNull Project project) {
+        super(project, null, true, IdeModalityType.IDE, false);
+        this.project = project;
+        setTitle("");
+        setSize(480, 520);
+        setResizable(false);
+        init();
     }
 
     @Override
@@ -53,14 +49,25 @@ public class FCGameCategoryDialog extends DialogWrapper {
         JTabbedPane tabbedPane = new JTabbedPane(JBTabbedPane.LEFT, JBTabbedPane.SCROLL_TAB_LAYOUT);
         tabbedPane.setFont(new Font(null, Font.BOLD, 15));
         for (FCGameCategory category : categoryList) {
-            JComponent content = new FCGameListComponent(project, this, "Click To Reload", category);
-            tabbedPane.addTab(category.name, content);
+            tabbedPane.addTab(category.name, createTabContentView(category));
         }
         return tabbedPane;
     }
 
     @NotNull
-    private JLabel createTipLabel() {
+    private JComponent createTabContentView(@NotNull FCGameCategory category) {
+        if (category.noGames()) {
+            return new FCGameEmptyComponent("Click To Reload", () -> {
+                close(DialogWrapper.CLOSE_EXIT_CODE);
+                FCGameLoader.getInstance().loadGame(category);
+            });
+        } else {
+            return new FCGameListComponent(project, category.games);
+        }
+    }
+
+    @NotNull
+    private JComponent createTipLabel() {
         String gameNode = GameResManager.getInstance().getGameNote();
         JLabel tip = new JLabel(gameNode);
         tip.setForeground(JBColor.foreground().darker());
