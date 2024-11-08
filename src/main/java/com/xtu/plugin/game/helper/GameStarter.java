@@ -14,7 +14,6 @@ import com.xtu.plugin.game.loader.fc.entity.FCGame;
 import com.xtu.plugin.game.res.GameResManager;
 import com.xtu.plugin.game.ui.FCGamePlayDialog;
 import com.xtu.plugin.game.utils.FileUtils;
-import com.xtu.plugin.game.utils.LogUtils;
 import com.xtu.plugin.game.utils.StreamUtils;
 import com.xtu.plugin.game.utils.ToastUtil;
 import org.jetbrains.annotations.NotNull;
@@ -83,7 +82,6 @@ public class GameStarter {
             Application application = ApplicationManager.getApplication();
             application.invokeLater(() -> BrowserUtil.browse(new File(tempPath)));
         } catch (Exception e) {
-            LogUtils.error("GameManager", e);
             ToastUtil.make(project, MessageType.ERROR, e.getMessage());
         }
     }

@@ -2,7 +2,6 @@ package com.xtu.plugin.game.loader;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.xtu.plugin.game.utils.LogUtils;
 import com.xtu.plugin.game.utils.StreamUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,7 +46,6 @@ public abstract class GameLoader {
             }
             return pairList;
         } catch (IOException e) {
-            LogUtils.error("GameLoader", e);
             return null;
         }
     }

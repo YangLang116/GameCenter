@@ -2,7 +2,6 @@ package com.xtu.plugin.game.downloader;
 
 import com.intellij.openapi.application.PathManager;
 import com.xtu.plugin.game.utils.CloseUtils;
-import com.xtu.plugin.game.utils.LogUtils;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -95,7 +94,6 @@ public class FileDownloader {
             InputStream inputStream = body.byteStream();
             return writeFile(inputStream, savePath);
         } catch (Exception e) {
-            LogUtils.error("loadFromNetwork", e);
             return null;
         }
     }

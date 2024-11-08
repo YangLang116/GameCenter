@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +45,7 @@ public class FCGameLoader extends GameLoader {
             FCGameCategory category = new FCGameCategory(entry.getKey(), entry.getValue());
             categories.add(category);
         }
+        Collections.sort(categories);
         Application application = ApplicationManager.getApplication();
         application.invokeLater(() -> {
             categoryList.addAll(categories);

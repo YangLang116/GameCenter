@@ -24,38 +24,41 @@ public class FCGameCategoryDialog extends DialogWrapper {
         dialog.show();
     }
 
-    private final Project project;
+    private JPanel rootPanel;
+    private JTabbedPane tabbedPane;
 
     private FCGameCategoryDialog(@NotNull Project project) {
         super(project, null, true, IdeModalityType.IDE, false);
-        this.project = project;
-        setTitle("");
-        setSize(480, 520);
-        setResizable(false);
+        initWindow();
+        initContentView(project);
         init();
     }
 
-    @Override
-    protected @Nullable JComponent createCenterPanel() {
-        JPanel contentPanel = new JPanel(new BorderLayout());
-        contentPanel.add(getGameTabView(), BorderLayout.CENTER);
-        contentPanel.add(createTipLabel(), BorderLayout.SOUTH);
-        return contentPanel;
+    private void initWindow() {
+        setTitle("");
+        setSize(480, 520);
+        setResizable(false);
+    }
+
+    private void initContentView(@NotNull Project project) {
+        this.rootPanel = new JPanel(new BorderLayout());
+        this.rootPanel.add(this.tabbedPane = getGameTabView(project), BorderLayout.CENTER);
+        this.rootPanel.add(createTipLabel(), BorderLayout.SOUTH);
     }
 
     @NotNull
-    private JComponent getGameTabView() {
+    private JTabbedPane getGameTabView(@NotNull Project project) {
         List<FCGameCategory> categoryList = FCGameLoader.getInstance().getCategoryList();
         JTabbedPane tabbedPane = new JTabbedPane(JBTabbedPane.LEFT, JBTabbedPane.SCROLL_TAB_LAYOUT);
         tabbedPane.setFont(new Font(null, Font.BOLD, 15));
         for (FCGameCategory category : categoryList) {
-            tabbedPane.addTab(category.name, createTabContentView(category));
+            tabbedPane.addTab(category.name, createTabContentView(project, category));
         }
         return tabbedPane;
     }
 
     @NotNull
-    private JComponent createTabContentView(@NotNull FCGameCategory category) {
+    private JComponent createTabContentView(@NotNull Project project, @NotNull FCGameCategory category) {
         if (category.noGames()) {
             return new FCGameEmptyComponent("Click To Reload", () -> {
                 close(DialogWrapper.CLOSE_EXIT_CODE);
@@ -74,5 +77,15 @@ public class FCGameCategoryDialog extends DialogWrapper {
         tip.setFont(new Font(null, Font.PLAIN, 12));
         tip.setBorder(JBUI.Borders.empty(10, 5));
         return tip;
+    }
+
+    @Override
+    protected @Nullable JComponent createCenterPanel() {
+        return this.rootPanel;
+    }
+
+    @Override
+    public @Nullable JComponent getPreferredFocusedComponent() {
+        return (JComponent) this.tabbedPane.getComponentAt(0);
     }
 }

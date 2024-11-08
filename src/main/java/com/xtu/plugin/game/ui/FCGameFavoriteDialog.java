@@ -23,10 +23,14 @@ public class FCGameFavoriteDialog extends DialogWrapper {
     private FCGameFavoriteDialog(@NotNull Project project) {
         super(project, null, true, IdeModalityType.IDE, false);
         this.project = project;
+        initWindow();
+        init();
+    }
+
+    private void initWindow() {
         setTitle("");
         setSize(480, 320);
         setResizable(false);
-        init();
     }
 
     @Override

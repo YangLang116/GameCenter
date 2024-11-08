@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FCGameCategory {
+public class FCGameCategory implements Comparable<FCGameCategory> {
 
     public final String name;
     public final String path;
@@ -29,5 +29,10 @@ public class FCGameCategory {
 
     public boolean noGames() {
         return games.isEmpty();
+    }
+
+    @Override
+    public int compareTo(@NotNull FCGameCategory other) {
+        return name.compareTo(other.name);
     }
 }

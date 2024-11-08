@@ -24,18 +24,22 @@ import java.util.concurrent.CompletableFuture;
 
 public class FCGameListComponent extends JPanel {
 
+    private final JBList<FCGameListRender.ItemEntity> listView;
     private final FileDownloader coverDownloader = new FileDownloader();
 
     public FCGameListComponent(@NotNull Project project, @NotNull List<FCGame> games) {
         setLayout(new BorderLayout());
+        this.listView = initListView(project, games);
+        add(new JBScrollPane(this.listView), BorderLayout.CENTER);
+    }
+
+    private JBList<FCGameListRender.ItemEntity> initListView(@NotNull Project project, @NotNull List<FCGame> games) {
         JBList<FCGameListRender.ItemEntity> listView = new JBList<>();
         listView.setCellRenderer(new FCGameListRender());
-        JBScrollPane scrollView = new JBScrollPane(listView);
-        add(scrollView, BorderLayout.CENTER);
-
         supportSearch(listView);
         setData(listView, games);
         bindListener(project, listView);
+        return listView;
     }
 
     private void supportSearch(@NotNull JBList<FCGameListRender.ItemEntity> listView) {
@@ -87,5 +91,10 @@ public class FCGameListComponent extends JPanel {
                 FCGameDetailDialog.show(project, game, coverDownloader);
             }
         });
+    }
+
+    @Override
+    public void requestFocus() {
+        this.listView.requestFocus();
     }
 }
