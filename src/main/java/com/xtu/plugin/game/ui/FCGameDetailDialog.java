@@ -131,6 +131,7 @@ public class FCGameDetailDialog extends DialogWrapper {
 
         @Override
         protected void doAction(ActionEvent actionEvent) {
+            close(DialogWrapper.OK_EXIT_CODE);
             if (isFavorite) {
                 GameStorageService.removeFavoriteGame(game);
                 isFavorite = false;
@@ -157,6 +158,7 @@ public class FCGameDetailDialog extends DialogWrapper {
 
         @Override
         protected void doAction(ActionEvent actionEvent) {
+            close(DialogWrapper.OK_EXIT_CODE);
             GameStarter.getInstance().playOnlineFCGame(project, game);
         }
     }
@@ -170,6 +172,7 @@ public class FCGameDetailDialog extends DialogWrapper {
 
         @Override
         protected void doAction(ActionEvent actionEvent) {
+            close(DialogWrapper.OK_EXIT_CODE);
             GameReporter.getInstance().submitAdvice(project, "Game Run Error", game.name);
         }
     }
