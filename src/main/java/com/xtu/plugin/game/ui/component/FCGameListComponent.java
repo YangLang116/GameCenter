@@ -43,7 +43,8 @@ public class FCGameListComponent extends JPanel {
     }
 
     private void supportSearch(@NotNull JBList<FCGameListRender.ItemEntity> listView) {
-        ListSpeedSearch.installOn(listView, FCGameListRender.ItemEntity::getKeyword);
+        //noinspection deprecation
+        new ListSpeedSearch<>(listView, FCGameListRender.ItemEntity::getKeyword);
     }
 
     private void setData(@NotNull JBList<FCGameListRender.ItemEntity> listView, @NotNull List<FCGame> games) {
