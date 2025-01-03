@@ -61,7 +61,7 @@ public class FCGameCellComponent extends JPanel {
         descLabel.setWrapStyleWord(true);
         descLabel.setFont(new Font(null, Font.PLAIN, 13));
         descLabel.setForeground(JBColor.foreground().darker());
-        descLabel.setBackground(new Color(0, 0, 0, 0));
+        descLabel.setBackground(JBColor.background());
         descLabel.setBorder(JBUI.Borders.empty(5, 0));
         return descLabel;
     }

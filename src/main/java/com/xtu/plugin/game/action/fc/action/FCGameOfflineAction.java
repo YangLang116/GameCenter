@@ -3,7 +3,7 @@ package com.xtu.plugin.game.action.fc.action;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
-import com.xtu.plugin.game.helper.GameStarter;
+import com.xtu.plugin.game.starter.GameStarter;
 import org.jetbrains.annotations.NotNull;
 
 public final class FCGameOfflineAction extends AnAction {

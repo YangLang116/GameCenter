@@ -1,4 +1,4 @@
-package com.xtu.plugin.game.helper;
+package com.xtu.plugin.game.starter;
 
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.application.Application;

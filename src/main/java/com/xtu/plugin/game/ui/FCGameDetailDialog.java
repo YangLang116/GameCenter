@@ -5,7 +5,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.JBUI;
 import com.xtu.plugin.game.downloader.FileDownloader;
-import com.xtu.plugin.game.helper.GameStarter;
+import com.xtu.plugin.game.starter.GameStarter;
 import com.xtu.plugin.game.loader.fc.entity.FCGame;
 import com.xtu.plugin.game.reporter.GameReporter;
 import com.xtu.plugin.game.res.GameResManager;
@@ -107,7 +107,7 @@ public class FCGameDetailDialog extends DialogWrapper {
         descLabel.setWrapStyleWord(true);
         descLabel.setFont(new Font(null, Font.PLAIN, 13));
         descLabel.setForeground(JBColor.foreground().darker());
-        descLabel.setBackground(new Color(0, 0, 0, 0));
+        descLabel.setBackground(JBColor.background());
         descLabel.setBorder(JBUI.Borders.empty(5, 0));
         panel.add(descLabel, BorderLayout.CENTER);
 

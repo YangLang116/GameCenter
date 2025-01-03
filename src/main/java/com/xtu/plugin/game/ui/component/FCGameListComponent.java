@@ -25,7 +25,7 @@ import java.util.concurrent.CompletableFuture;
 public class FCGameListComponent extends JPanel {
 
     private final JBList<FCGameListRender.ItemEntity> listView;
-    private final FileDownloader coverDownloader = new FileDownloader();
+    private final FileDownloader downloader = new FileDownloader();
 
     public FCGameListComponent(@NotNull Project project, @NotNull List<FCGame> games) {
         setLayout(new BorderLayout());
@@ -53,7 +53,7 @@ public class FCGameListComponent extends JPanel {
             FCGame game = games.get(i);
             listModel.addElement(new FCGameListRender.ItemEntity(game));
             int finalI = i;
-            downloadCover(coverDownloader, game.icon).thenAccept(image -> {
+            downloadCover(downloader, game.icon).thenAccept(image -> {
                 if (image != null) {
                     listModel.set(finalI, new FCGameListRender.ItemEntity(game, image));
                 }
@@ -89,7 +89,7 @@ public class FCGameListComponent extends JPanel {
                 int index = listView.locationToIndex(e.getPoint());
                 FCGameListRender.ItemEntity itemEntity = listView.getModel().getElementAt(index);
                 FCGame game = itemEntity.getGame();
-                FCGameDetailDialog.show(project, game, coverDownloader);
+                FCGameDetailDialog.show(project, game, downloader);
             }
         });
     }
