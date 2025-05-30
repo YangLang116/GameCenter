@@ -5,10 +5,10 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.JBUI;
 import com.xtu.plugin.game.downloader.FileDownloader;
-import com.xtu.plugin.game.starter.GameStarter;
 import com.xtu.plugin.game.loader.fc.entity.FCGame;
 import com.xtu.plugin.game.reporter.GameReporter;
 import com.xtu.plugin.game.res.GameResManager;
+import com.xtu.plugin.game.starter.GameStarter;
 import com.xtu.plugin.game.store.GameStorageService;
 import icons.PluginIcons;
 import net.coobird.thumbnailator.Thumbnails;
@@ -44,7 +44,7 @@ public class FCGameDetailDialog extends DialogWrapper {
         this.game = game;
         this.downloader = downloader;
         setTitle("");
-        setSize(480, 320);
+        setSize(480, 280);
         setResizable(false);
         init();
     }
@@ -60,7 +60,7 @@ public class FCGameDetailDialog extends DialogWrapper {
 
     private JComponent createCover() {
         Box box = Box.createVerticalBox();
-        JLabel coverView = new JLabel(PluginIcons.GAME);
+        JLabel coverView = new JLabel();
         coverView.setPreferredSize(new Dimension(SIZE_COVER, SIZE_COVER));
         loadCover(coverView);
         box.add(coverView);
@@ -72,11 +72,7 @@ public class FCGameDetailDialog extends DialogWrapper {
         String url = GameResManager.getInstance().getResUrl(game.icon);
         downloader.downloadFileAsync(url, true)
                 .thenApplyAsync(path -> path == null ? null : loadThumbnail(path))
-                .thenAccept(image -> {
-                    if (image != null) {
-                        coverView.setIcon(new ImageIcon(image));
-                    }
-                });
+                .thenAccept(image -> coverView.setIcon(image != null ? new ImageIcon(image) : PluginIcons.GAME));
     }
 
     @Nullable
@@ -94,7 +90,7 @@ public class FCGameDetailDialog extends DialogWrapper {
 
     private JComponent createInfo() {
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(JBUI.Borders.emptyLeft(5));
+        panel.setBorder(JBUI.Borders.emptyLeft(10));
 
         JLabel titleLabel = new JLabel(String.format("<html><u>%s</u></html>", game.name));
         titleLabel.setFont(new Font(null, Font.BOLD, 18));
@@ -103,13 +99,19 @@ public class FCGameDetailDialog extends DialogWrapper {
 
         JTextArea descLabel = new JTextArea(game.desc);
         descLabel.setEditable(false);
+        descLabel.setFocusable(false);
         descLabel.setLineWrap(true);
         descLabel.setWrapStyleWord(true);
         descLabel.setFont(new Font(null, Font.PLAIN, 13));
         descLabel.setForeground(JBColor.foreground().darker());
         descLabel.setBackground(JBColor.background());
-        descLabel.setBorder(JBUI.Borders.empty(5, 0));
-        panel.add(descLabel, BorderLayout.CENTER);
+
+        JScrollPane scrollPane = new JScrollPane(descLabel);
+        scrollPane.setBorder(JBUI.Borders.empty(5, 0));
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        panel.add(scrollPane, BorderLayout.CENTER);
 
         return panel;
     }

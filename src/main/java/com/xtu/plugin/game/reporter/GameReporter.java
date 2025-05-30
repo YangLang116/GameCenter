@@ -1,7 +1,6 @@
 package com.xtu.plugin.game.reporter;
 
 import com.google.gson.Gson;
-import com.google.gson.annotations.SerializedName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.util.SystemInfo;
@@ -68,7 +67,7 @@ public class GameReporter {
         }
 
         @Override
-        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+        public void onResponse(@NotNull Call call, @NotNull Response response) {
             onFinish();
         }
 
@@ -79,8 +78,6 @@ public class GameReporter {
 
         private final String title;
         private final String content;
-        @SerializedName("app_key")
-        private final String appKey = "GameCenter";
         private final String os = SystemInfo.getOsNameAndVersion();
         private final String version = VersionUtils.getPluginVersion();
 
@@ -91,6 +88,7 @@ public class GameReporter {
 
         @Override
         public String toString() {
+            String appKey = "GameCenter";
             return "ReportData{" +
                     "title='" + title + '\'' +
                     ", content='" + content + '\'' +

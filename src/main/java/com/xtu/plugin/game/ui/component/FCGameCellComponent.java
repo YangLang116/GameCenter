@@ -11,9 +11,9 @@ import java.awt.*;
 
 public class FCGameCellComponent extends JPanel {
 
-    protected JLabel coverView;
     protected JLabel titleView;
     protected JTextArea descView;
+    protected JLabel coverView;
 
     public FCGameCellComponent() {
         setLayout(new BorderLayout());
@@ -41,7 +41,7 @@ public class FCGameCellComponent extends JPanel {
 
     private JComponent createInfoContainer() {
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(JBUI.Borders.emptyLeft(5));
+        panel.setBorder(JBUI.Borders.emptyLeft(10));
         panel.add(this.titleView = createTitleView(), BorderLayout.NORTH);
         panel.add(this.descView = createDescView(), BorderLayout.CENTER);
         return panel;
@@ -57,6 +57,7 @@ public class FCGameCellComponent extends JPanel {
     private JTextArea createDescView() {
         JTextArea descLabel = new JTextArea();
         descLabel.setEditable(false);
+        descLabel.setFocusable(false);
         descLabel.setLineWrap(true);
         descLabel.setWrapStyleWord(true);
         descLabel.setFont(new Font(null, Font.PLAIN, 13));
@@ -66,16 +67,13 @@ public class FCGameCellComponent extends JPanel {
         return descLabel;
     }
 
-    public void setData(@NotNull String name,
-                        @NotNull String desc,
-                        @Nullable Image cover) {
+    public void setData(@NotNull String name, @NotNull String desc, @Nullable Image cover) {
         this.titleView.setText(String.format("<html><u>%s</u></html>", name));
         this.titleView.setToolTipText(name);
 
         String descSummary = desc.length() > 50 ? desc.substring(0, 50) + "..." : desc;
         this.descView.setText(descSummary);
         this.descView.setToolTipText(desc);
-
-        this.coverView.setIcon(cover == null ? PluginIcons.GAME : new ImageIcon(cover));
+        this.coverView.setIcon(cover != null ? new ImageIcon(cover) : PluginIcons.GAME);
     }
 }
