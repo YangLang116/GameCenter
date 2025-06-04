@@ -12,7 +12,7 @@ public class GameStoreEntity {
 
     @OptionTag(converter = FCGameConverter.class)
     public List<FCGame> favoriteGame = new ArrayList<>();
-    public String gameRepo = "https://gitee.com/YangLang116/nes-game-list/raw/main";
+    public String gameRepo = "https://proxy.v2gh.com/https://raw.githubusercontent.com/YangLang116/nes-game-list/refs/heads/main";
 
     public GameStoreEntity() {
     }
