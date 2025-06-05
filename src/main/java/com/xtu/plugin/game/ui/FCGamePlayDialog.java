@@ -8,6 +8,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.jcef.JBCefBrowser;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,9 +18,7 @@ public class FCGamePlayDialog extends DialogWrapper {
 
     private final String htmlContent;
 
-    public static void play(@NotNull Project project,
-                            @NotNull String title,
-                            @NotNull String htmlContent) {
+    public static void play(@NotNull Project project, @NotNull String title, @NotNull String htmlContent) {
         Runnable showRunnable = () -> {
             FCGamePlayDialog dialog = new FCGamePlayDialog(project, title, htmlContent);
             dialog.show();
@@ -32,14 +31,17 @@ public class FCGamePlayDialog extends DialogWrapper {
         }
     }
 
-    private FCGamePlayDialog(@NotNull Project project,
-                             @NotNull String gameName,
-                             @NotNull String gameContent) {
+    private FCGamePlayDialog(@NotNull Project project, @NotNull String gameName, @NotNull String gameContent) {
         super(project, null, false, IdeModalityType.IDE, false);
         this.htmlContent = gameContent;
         setTitle(gameName);
-        setSize(512, 480);
+        setSize(550, 543);
         init();
+    }
+
+    @Override
+    protected @NonNls @Nullable String getDimensionServiceKey() {
+        return FCGamePlayDialog.class.getName();
     }
 
     @Override

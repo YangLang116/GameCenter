@@ -40,6 +40,12 @@ GameCenter is an IDEA Plugin for Developer to play Games
 -Dfile.encoding=UTF-8
 ```
 
+### 游戏仓库配置
+`⚙` > `Tools` > `GameCenter`，如：
+
+- https://cdn.jsdelivr.net/gh/YangLang116/nes-game-list@main
+- https://proxy.v2gh.com/https://raw.githubusercontent.com/YangLang116/nes-game-list/refs/heads/main
+
 ---
 
 ## 插件扩展

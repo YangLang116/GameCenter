@@ -3,4 +3,5 @@
 .qodana
 build
 profiles
+runtime
 .intellijPlatform

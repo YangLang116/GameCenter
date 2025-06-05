@@ -4,7 +4,7 @@ import org.jetbrains.changelog.markdownToHTML
 plugins {
     id("java")
     id("org.jetbrains.changelog") version "2.2.1"
-    id("org.jetbrains.intellij.platform") version "2.0.1"
+    id("org.jetbrains.intellij.platform") version "2.5.0"
 }
 
 repositories {
@@ -63,10 +63,10 @@ intellijPlatform {
         changeNotes = providers.gradleProperty("pluginVersion").map { pluginVersion ->
             with(changelog) {
                 renderItem(
-                        (getOrNull(pluginVersion) ?: getUnreleased())
-                                .withHeader(false)
-                                .withEmptySections(false),
-                        Changelog.OutputType.HTML,
+                    (getOrNull(pluginVersion) ?: getUnreleased())
+                        .withHeader(false)
+                        .withEmptySections(false),
+                    Changelog.OutputType.HTML,
                 )
             }
         }
@@ -79,7 +79,7 @@ intellijPlatform {
     publishing {
         token = providers.environmentVariable("PUBLISH_TOKEN")
         channels = providers.gradleProperty("pluginVersion")
-                .map { listOf(it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" }) }
+            .map { listOf(it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" }) }
     }
     pluginVerification {
         ides {
@@ -95,6 +95,9 @@ intellijPlatformTesting {
             prepareSandboxTask {
                 sandboxDirectory = project.layout.buildDirectory.dir("sandbox-as")
             }
+//            task {
+//                runtimeDirectory = project.layout.projectDirectory.dir("runtime/jbr_jcef-21.0.7-windows-x64-b1020.35")
+//            }
         }
     }
 }
